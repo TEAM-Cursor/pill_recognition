@@ -1,56 +1,19 @@
-# Welcome to your Expo app 👋
+# pill_recognition
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> 소개·실행법·환경변수. 의사결정·범위는 PLAN. (CONVENTIONS §6)
 
-## Get started
+알약을 카메라로 비추면 개인 정보와 현재 시각에 맞춘 용법·용량·주의사항을 LLM이 안내하는 모바일 앱(React Native / Expo).
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+## 실행
 ```
+npm install
+npx expo start
+```
+- Expo Go 앱으로 QR 스캔(실기기), 또는 `a`(Android 에뮬레이터) / `i`(iOS 시뮬레이터, macOS).
+- 카메라·좌우 스와이프 탭은 **모바일 권장** — 웹(`w`)은 pager-view/카메라 제약이 있음.
+- 온보딩을 다시 보려면 앱 데이터(AsyncStorage)를 지우면 됨.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 환경변수
+_현재 더미 단계라 불필요. 실연동(M2~M4) 시 예정:_
+- `ANTHROPIC_API_KEY` — Claude(비전·안내·요약)
+- `PUBLIC_DATA_API_KEY` — 공공데이터포털 인증키(낱알식별·DUR·e약은요)
