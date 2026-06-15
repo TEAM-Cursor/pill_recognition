@@ -1,21 +1,32 @@
-# CODEOWNERS — PR 시 자동 리뷰어 지정 + 위험구역 보호
-# 아래 @아이디 자리표시자를 실제 GitHub 아이디로 바꿀 것.
-# 규칙은 "마지막에 매치된 줄"이 이긴다 → 위험구역 블록을 맨 아래 둔다.
+# CODEOWNERS — "잠글 경로"만 적는다.
+# 적힌 파일은 그 owner의 승인이 있어야 main 머지 가능 (branch protection의
+# "Require review from Code Owners"를 켰을 때 발효). 안 적힌 파일(일반 코드,
+# HANDOFF.md, CHANGELOG.md 등)은 코드오너가 없어 일반 승인(아무 팀원 1명)으로 머지 가능.
+# 규칙은 "마지막에 매치된 줄"이 이긴다.
 
-# 기본: 모든 파일은 팀 리드가 본다
-*                                @bestcow
+# ----- 기능별 담당 (세로 슬라이스) — 아래 @bestcow를 각 담당자 아이디로 교체 -----
+/backend/app/pill/               @bestcow   # 알약 식별 (공공 API 활용) 
+/backend/app/guidance/           @bestcow   # 복약 안내·요약        → 멤버1 아이디로 교체
+/frontend/src/pages/result/      @bestcow   # 결과·안내 표시        → 멤버1 아이디로 교체
+/frontend/src/pages/home/        @bestcow   # 카메라·캡처           → 멤버2 아이디로 교체
+/frontend/src/pages/profile/     @bestcow   # 내 정보·온보딩        → 멤버3 아이디로 교체
+/frontend/src/pages/cabinet/     @bestcow   # 알약사전              → 멤버4 아이디로 교체
 
-# 담당 폴더 (각 기능 담당자)
-/backend/app/auth/               @bestcow
-/backend/app/pill/        @bestcow
-/frontend/src/pages/auth/        @bestcow
-/frontend/src/pages/pill/ @bestcow
-/frontend/src/                   @bestcow
-
-# ===== 위험 공용구역 — 팀 리드만 승인 가능 =====
+# ----- 위험 공용구역 — 리드만 승인 -----
 /backend/app/core/               @bestcow
+/frontend/src/components/        @bestcow
+/frontend/src/api/               @bestcow   # 백엔드 호출 계약(공용)
 /.github/                        @bestcow
 *.yml                            @bestcow
 *.yaml                           @bestcow
 /backend/requirements.txt        @bestcow
 /frontend/package.json           @bestcow
+
+# ----- 구조·규칙 문서 — 리드만 승인 (맨 아래 = 최우선) -----
+/CONVENTIONS.md                  @bestcow
+/CLAUDE.md                       @bestcow
+/AGENTS.md                       @bestcow
+/PLAN.md                         @bestcow
+/README.md                       @bestcow
+/CONTRIBUTING.md                 @bestcow
+# HANDOFF.md · CHANGELOG.md 는 일부러 미지정 → 팀원끼리 갱신·승인 가능 (doc 시스템 병목 방지)
