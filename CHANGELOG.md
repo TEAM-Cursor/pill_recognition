@@ -2,6 +2,9 @@
 
 > 날짜별 굵직한 변경 한 줄. 세세한 커밋은 git log. (CONVENTIONS §3)
 
+## 2026-06-17
+- 데이터 모델 v1 확정: [docs/ERD.md](docs/ERD.md) 신설(PostgreSQL 대상, 테이블 10개). 결정: 계정/이미지 서버 미저장 정책 + **프로토타입은 서버 미구현, 프론트 임시 저장**. PLAN 기술결정에 반영.
+
 ## 2026-06-15
 - repo 공개 전환: private → **public**(커밋 이력 시크릿 스캔 클린 확인 후). free org Actions 분 제한 해소.
 - 시크릿 관리 정비: `backend/.env.example` + `app/core/config.py`(pydantic-settings) 추가, GitHub secret scanning + push protection 활성화, CONTRIBUTING에 키 규칙 한 줄.
