@@ -1,173 +1,230 @@
-<svg width="1600" height="1120" viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img" font-family="'Malgun Gothic', ui-sans-serif, system-ui, -apple-system, sans-serif">
-<title>pill_recognition 데이터 모델 (한국어)</title>
-<desc>계정·건강정보, 인식·대화·요약, 약(식약처 캐시) 테이블 관계도</desc>
-<rect x="0" y="0" width="1000" height="700" fill="#ffffff"/>
+<svg width="1740" height="1200" viewBox="0 0 1160 800" xmlns="http://www.w3.org/2000/svg" role="img" font-family="'Malgun Gothic', ui-sans-serif, system-ui, -apple-system, sans-serif">
+<title>pill_recognition 데이터 모델 (한국어/영어)</title>
+<desc>계정·건강정보, 인식·대화·요약, 약(식약처 캐시) 테이블 관계도. 까마귀발 표기.</desc>
+<rect x="0" y="0" width="1160" height="800" fill="#ffffff"/>
 
-<!-- legend -->
-<g transform="translate(20,20)">
-  <rect x="0" y="0" width="12" height="12" rx="3" fill="#3b5bdb"/>
-  <text x="18" y="10" font-size="11" fill="#6b7280">사용자 소유 데이터</text>
-  <rect x="0" y="20" width="12" height="12" rx="3" fill="#495057"/>
-  <text x="18" y="30" font-size="11" fill="#6b7280">공공API 참조(캐시)</text>
-  <text x="0" y="52" font-size="11" fill="#6b7280">점선 = 선택 · 1·N = 카디널리티 · FK? = nullable</text>
-</g>
+<defs>
+  <marker id="one" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="9" refY="9" orient="auto">
+    <path d="M9,4 V14" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  </marker>
+  <marker id="oneOpt" markerUnits="userSpaceOnUse" markerWidth="22" markerHeight="18" refX="13" refY="9" orient="auto">
+    <path d="M13,4 V14" stroke="#64748b" stroke-width="1.5" fill="none"/>
+    <circle cx="5" cy="9" r="3.2" fill="#ffffff" stroke="#64748b" stroke-width="1.3"/>
+  </marker>
+  <marker id="many" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="13" refY="9" orient="auto">
+    <path d="M0,9 L13,3 M0,9 L13,15 M0,9 L13,9" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  </marker>
+  <marker id="manyOpt" markerUnits="userSpaceOnUse" markerWidth="24" markerHeight="18" refX="19" refY="9" orient="auto">
+    <circle cx="4" cy="9" r="3" fill="#ffffff" stroke="#64748b" stroke-width="1.3"/>
+    <path d="M8,9 L19,3 M8,9 L19,15 M8,9 L19,9" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  </marker>
+</defs>
 
-<!-- connectors -->
-<g stroke="#9aa3af" stroke-width="1.4" fill="none">
-  <path d="M545,125 V170"/>
-  <path d="M455,75 H135 V185"/>
-  <path d="M480,125 H415 V430 H445"/>
-  <path d="M545,305 V360" stroke-dasharray="4 3"/>
-  <path d="M510,495 V520 H430 V545"/>
-  <path d="M590,495 V520 H632 V545"/>
-  <path d="M645,230 H775"/>
-  <path d="M645,420 H710 V300 H775"/>
-  <path d="M130,320 V360"/>
-  <path d="M180,320 V340 H320 V360"/>
-</g>
-
-<!-- ===== 계정 users ===== -->
+<!-- ===== group backgrounds ===== -->
 <g>
-  <rect x="455" y="20" width="180" height="105" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M455,44 V28 Q455,20 463,20 H627 Q635,20 635,28 V44 Z" fill="#3b5bdb"/>
-  <text x="465" y="36" font-size="12" font-weight="600" fill="#fff">계정 <tspan font-size="9" fill-opacity="0.7">users</tspan></text>
-  <text x="465" y="58" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="465" y="73" font-size="10.5" fill="#1f1f1f">이메일<tspan dx="5" font-size="9" fill="#8a8f98">고유</tspan></text>
-  <text x="465" y="88" font-size="10.5" fill="#1f1f1f">비밀번호 해시</text>
-  <text x="465" y="103" font-size="10.5" fill="#1f1f1f">닉네임</text>
-  <text x="465" y="118" font-size="10.5" fill="#1f1f1f">가입일시</text>
+  <rect x="24" y="190" width="366" height="372" rx="14" fill="#eef1fc" stroke="#c7d0f5" stroke-width="1.2" stroke-dasharray="2 4"/>
+  <text x="40" y="211" font-size="12.5" font-weight="700" fill="#3b5bdb">건강정보 <tspan font-size="10" font-weight="600" fill="#7c8cd6">HEALTH PROFILE</tspan></text>
+
+  <rect x="404" y="190" width="372" height="558" rx="14" fill="#eafaf7" stroke="#bfeee6" stroke-width="1.2" stroke-dasharray="2 4"/>
+  <text x="420" y="211" font-size="12.5" font-weight="700" fill="#0d9488"><tspan>인식 · 대화 · 요약 </tspan><tspan font-size="10" font-weight="600" fill="#5cc4b8">SCAN &#183; CHAT</tspan></text>
+
+  <rect x="806" y="190" width="330" height="224" rx="14" fill="#f1f3f6" stroke="#d8dee7" stroke-width="1.2" stroke-dasharray="2 4"/>
+  <text x="822" y="211" font-size="12.5" font-weight="700" fill="#475569">약 정보 <tspan font-size="10" font-weight="600" fill="#94a3b8">DRUG INFO &#183; 식약처</tspan></text>
 </g>
 
-<!-- ===== 건강정보 health_profiles ===== -->
+<!-- ===== legend ===== -->
+<g transform="translate(24,18)">
+  <rect x="0" y="0" width="476" height="150" rx="12" fill="#fcfcfd" stroke="#e5e7eb"/>
+  <text x="16" y="24" font-size="12.5" font-weight="700" fill="#374151">읽는 법 · Legend</text>
+
+  <text x="16" y="48" font-size="10.5" font-weight="700" fill="#6b7280">관계 (Cardinality)</text>
+  <line x1="120" y1="44" x2="160" y2="44" stroke="#64748b" stroke-width="1.5" marker-end="url(#one)"/>
+  <text x="170" y="48" font-size="10" fill="#4b5563">1 (하나)</text>
+  <line x1="250" y1="44" x2="290" y2="44" stroke="#64748b" stroke-width="1.5" marker-end="url(#many)"/>
+  <text x="300" y="48" font-size="10" fill="#4b5563">N (여럿)</text>
+  <line x1="380" y1="44" x2="420" y2="44" stroke="#64748b" stroke-width="1.5" marker-end="url(#manyOpt)"/>
+  <text x="430" y="48" font-size="10" fill="#4b5563">0..N (선택)</text>
+
+  <text x="16" y="76" font-size="10.5" font-weight="700" fill="#6b7280">키 (Keys)</text>
+  <g transform="translate(120,66)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="146" y="76" font-size="10" fill="#4b5563">기본키</text>
+  <g transform="translate(210,66)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="236" y="76" font-size="10" fill="#4b5563">외래키</text>
+  <g transform="translate(300,66)"><rect width="26" height="13" rx="3" fill="#dbeafe"/><text x="13" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK?</text></g>
+  <text x="332" y="76" font-size="10" fill="#4b5563">선택 외래키(null 허용)</text>
+
+  <text x="16" y="104" font-size="10.5" font-weight="700" fill="#6b7280">색 (Group)</text>
+  <rect x="120" y="95" width="12" height="12" rx="3" fill="#3b5bdb"/><text x="138" y="105" font-size="10" fill="#4b5563">계정·건강</text>
+  <rect x="220" y="95" width="12" height="12" rx="3" fill="#0d9488"/><text x="238" y="105" font-size="10" fill="#4b5563">인식·대화</text>
+  <rect x="320" y="95" width="12" height="12" rx="3" fill="#475569"/><text x="338" y="105" font-size="10" fill="#4b5563">약(외부 참조)</text>
+
+  <text x="16" y="130" font-size="10" fill="#9ca3af">· 점선 박스 = 선택 기능 · 실선 = DB 외래키 관계</text>
+  <text x="16" y="144" font-size="10" fill="#9ca3af">· english 필드명은 회색 고정폭 글씨</text>
+</g>
+
+<!-- ===== connectors ===== -->
+<g stroke="#64748b" stroke-width="1.4" fill="none">
+  <path d="M558,148 V180 H194 V212" marker-start="url(#one)" marker-end="url(#oneOpt)"/>
+  <path d="M620,148 V196 H555 V212" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M700,148 V168 H766 V470 H680" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M760,96 H796 V522 H826" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M129,372 V400" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M270,372 V388 H294 V400" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M520,372 V400" marker-start="url(#one)" marker-end="url(#oneOpt)"/>
+  <path d="M500,560 V588" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M620,560 V574 H690 V588" marker-start="url(#one)" marker-end="url(#manyOpt)"/>
+  <path d="M680,300 H826" marker-start="url(#many)" marker-end="url(#oneOpt)"/>
+  <path d="M680,470 H760 V360 H826" marker-start="url(#many)" marker-end="url(#oneOpt)"/>
+</g>
+
+<!-- ============ 계정 users ============ -->
 <g>
-  <rect x="35" y="185" width="200" height="135" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M35,209 V193 Q35,185 43,185 H227 Q235,185 235,193 V209 Z" fill="#3b5bdb"/>
-  <text x="45" y="201" font-size="12" font-weight="600" fill="#fff">건강정보 <tspan font-size="9" fill-opacity="0.7">health_profiles</tspan></text>
-  <text x="45" y="223" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="45" y="238" font-size="10.5" fill="#1f1f1f">사용자<tspan dx="5" font-size="9" fill="#8a8f98">FK→계정 · 1:1</tspan></text>
-  <text x="45" y="253" font-size="10.5" fill="#1f1f1f">출생연도</text>
-  <text x="45" y="268" font-size="10.5" fill="#1f1f1f">성별<tspan dx="5" font-size="9" fill="#8a8f98">남/여/기타</tspan></text>
-  <text x="45" y="283" font-size="10.5" fill="#1f1f1f">임신 여부</text>
-  <text x="45" y="298" font-size="10.5" fill="#1f1f1f">수유 여부</text>
-  <text x="45" y="313" font-size="10.5" fill="#1f1f1f">수정일시</text>
+  <rect x="520" y="24" width="240" height="124" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M520,50 V33 Q520,24 529,24 H751 Q760,24 760,33 V50 Z" fill="#3b5bdb"/>
+  <text x="534" y="42" font-size="12.5" font-weight="700" fill="#fff">계정 <tspan font-size="10" fill-opacity="0.8">users</tspan></text>
+  <line x1="520" y1="50" x2="760" y2="50" stroke="#cbd2dc"/>
+  <line x1="520" y1="68" x2="760" y2="68" stroke="#eef0f3"/>
+  <text x="532" y="63" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="722" y="63" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(732,53)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="532" y="81" font-size="11" fill="#1f2937">이메일</text><text x="724" y="81" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">email</text><g transform="translate(732,71)"><rect width="20" height="13" rx="3" fill="#e5e7eb"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#374151">UQ</text></g>
+  <text x="532" y="99" font-size="11" fill="#1f2937">비밀번호</text><text x="748" y="99" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">password_hash</text>
+  <text x="532" y="117" font-size="11" fill="#1f2937">닉네임</text><text x="748" y="117" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">nickname</text>
+  <text x="532" y="135" font-size="11" fill="#1f2937">가입일시</text><text x="748" y="135" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 
-<!-- ===== 복용약 medications ===== -->
+<!-- ============ 건강정보 health_profiles ============ -->
 <g>
-  <rect x="35" y="360" width="190" height="120" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M35,384 V368 Q35,360 43,360 H217 Q225,360 225,368 V384 Z" fill="#3b5bdb"/>
-  <text x="45" y="376" font-size="12" font-weight="600" fill="#fff">복용약 <tspan font-size="9" fill-opacity="0.7">medications</tspan></text>
-  <text x="45" y="398" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="45" y="413" font-size="10.5" fill="#1f1f1f">건강정보<tspan dx="5" font-size="9" fill="#8a8f98">FK</tspan></text>
-  <text x="45" y="428" font-size="10.5" fill="#1f1f1f">약 이름</text>
-  <text x="45" y="443" font-size="10.5" fill="#1f1f1f">약품코드<tspan dx="5" font-size="9" fill="#8a8f98">FK?→약</tspan></text>
-  <text x="45" y="458" font-size="10.5" fill="#1f1f1f">메모</text>
-  <text x="45" y="473" font-size="10.5" fill="#1f1f1f">등록일시</text>
+  <rect x="44" y="212" width="300" height="160" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M44,238 V221 Q44,212 53,212 H335 Q344,212 344,221 V238 Z" fill="#3b5bdb"/>
+  <text x="58" y="230" font-size="12.5" font-weight="700" fill="#fff">건강정보 <tspan font-size="10" fill-opacity="0.8">health_profiles</tspan></text>
+  <line x1="44" y1="238" x2="344" y2="238" stroke="#cbd2dc"/>
+  <line x1="44" y1="256" x2="344" y2="256" stroke="#eef0f3"/>
+  <text x="56" y="251" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="306" y="251" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(316,241)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="56" y="269" font-size="11" fill="#1f2937">사용자</text><text x="306" y="269" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">user_id</text><g transform="translate(316,259)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="56" y="287" font-size="11" fill="#1f2937">출생연도</text><text x="332" y="287" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">birth_year</text>
+  <text x="56" y="305" font-size="11" fill="#1f2937">성별</text><text x="332" y="305" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">sex</text>
+  <text x="56" y="323" font-size="11" fill="#1f2937">임신 여부</text><text x="332" y="323" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">is_pregnant</text>
+  <text x="56" y="341" font-size="11" fill="#1f2937">수유 여부</text><text x="332" y="341" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">is_breastfeeding</text>
+  <text x="56" y="359" font-size="11" fill="#1f2937">수정일시</text><text x="332" y="359" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">updated_at</text>
 </g>
 
-<!-- ===== 알레르기 allergies ===== -->
+<!-- ============ 복용약 medications ============ -->
 <g>
-  <rect x="240" y="360" width="160" height="105" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M240,384 V368 Q240,360 248,360 H392 Q400,360 400,368 V384 Z" fill="#3b5bdb"/>
-  <text x="250" y="376" font-size="12" font-weight="600" fill="#fff">알레르기 <tspan font-size="9" fill-opacity="0.7">allergies</tspan></text>
-  <text x="250" y="398" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="250" y="413" font-size="10.5" fill="#1f1f1f">건강정보<tspan dx="5" font-size="9" fill="#8a8f98">FK</tspan></text>
-  <text x="250" y="428" font-size="10.5" fill="#1f1f1f">항목 이름</text>
-  <text x="250" y="443" font-size="10.5" fill="#1f1f1f">메모</text>
-  <text x="250" y="458" font-size="10.5" fill="#1f1f1f">등록일시</text>
+  <rect x="44" y="400" width="170" height="142" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M44,426 V409 Q44,400 53,400 H205 Q214,400 214,409 V426 Z" fill="#3b5bdb"/>
+  <text x="58" y="418" font-size="12" font-weight="700" fill="#fff">복용약 <tspan font-size="9.5" fill-opacity="0.8">medications</tspan></text>
+  <line x1="44" y1="426" x2="214" y2="426" stroke="#cbd2dc"/>
+  <line x1="44" y1="444" x2="214" y2="444" stroke="#eef0f3"/>
+  <text x="56" y="439" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="176" y="439" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(186,429)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="56" y="457" font-size="11" fill="#1f2937">건강정보</text><text x="176" y="457" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">profile_id</text><g transform="translate(186,447)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="56" y="475" font-size="11" fill="#1f2937">약 이름</text><text x="202" y="475" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">name</text>
+  <text x="56" y="493" font-size="11" fill="#1f2937">약품코드</text><text x="170" y="493" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">pill_item_seq</text><g transform="translate(182,483)"><rect width="26" height="13" rx="3" fill="#dbeafe"/><text x="13" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK?</text></g>
+  <text x="56" y="511" font-size="11" fill="#1f2937">메모</text><text x="202" y="511" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">memo</text>
+  <text x="56" y="529" font-size="11" fill="#1f2937">등록일시</text><text x="202" y="529" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 
-<!-- ===== 인식 scans ===== -->
+<!-- ============ 알레르기 allergies ============ -->
 <g>
-  <rect x="445" y="170" width="200" height="135" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M445,194 V178 Q445,170 453,170 H637 Q645,170 645,178 V194 Z" fill="#3b5bdb"/>
-  <text x="455" y="186" font-size="12" font-weight="600" fill="#fff">인식 <tspan font-size="9" fill-opacity="0.7">scans</tspan></text>
-  <text x="455" y="208" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="455" y="223" font-size="10.5" fill="#1f1f1f">사용자<tspan dx="5" font-size="9" fill="#8a8f98">FK</tspan></text>
-  <text x="455" y="238" font-size="10.5" fill="#1f1f1f">추출 속성<tspan dx="5" font-size="9" fill="#8a8f98">JSON · 각인/색/모양/분할선</tspan></text>
-  <text x="455" y="253" font-size="10.5" fill="#1f1f1f">매칭 품목코드<tspan dx="5" font-size="9" fill="#8a8f98">FK?→약</tspan></text>
-  <text x="455" y="268" font-size="10.5" fill="#1f1f1f">신뢰도</text>
-  <text x="455" y="283" font-size="10.5" fill="#1f1f1f">상태<tspan dx="5" font-size="9" fill="#8a8f98">성공/모호/실패</tspan></text>
-  <text x="455" y="298" font-size="10.5" fill="#1f1f1f">인식일시</text>
+  <rect x="224" y="400" width="140" height="124" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M224,426 V409 Q224,400 233,400 H355 Q364,400 364,409 V426 Z" fill="#3b5bdb"/>
+  <text x="238" y="418" font-size="12" font-weight="700" fill="#fff">알레르기 <tspan font-size="9.5" fill-opacity="0.8">allergies</tspan></text>
+  <line x1="224" y1="426" x2="364" y2="426" stroke="#cbd2dc"/>
+  <line x1="224" y1="444" x2="364" y2="444" stroke="#eef0f3"/>
+  <text x="236" y="439" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="326" y="439" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(336,429)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="236" y="457" font-size="11" fill="#1f2937">건강정보</text><text x="326" y="457" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">profile_id</text><g transform="translate(336,447)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="236" y="475" font-size="11" fill="#1f2937">항목명</text><text x="352" y="475" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">name</text>
+  <text x="236" y="493" font-size="11" fill="#1f2937">메모</text><text x="352" y="493" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">memo</text>
+  <text x="236" y="511" font-size="11" fill="#1f2937">등록일시</text><text x="352" y="511" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 
-<!-- ===== 알약사전 conversations ===== -->
+<!-- ============ 인식 scans ============ -->
 <g>
-  <rect x="445" y="360" width="200" height="135" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M445,384 V368 Q445,360 453,360 H637 Q645,360 645,368 V384 Z" fill="#3b5bdb"/>
-  <text x="455" y="376" font-size="12" font-weight="600" fill="#fff">알약사전 <tspan font-size="9" fill-opacity="0.7">conversations</tspan></text>
-  <text x="455" y="398" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="455" y="413" font-size="10.5" fill="#1f1f1f">사용자<tspan dx="5" font-size="9" fill="#8a8f98">FK</tspan></text>
-  <text x="455" y="428" font-size="10.5" fill="#1f1f1f">품목코드<tspan dx="5" font-size="9" fill="#8a8f98">FK?→약</tspan></text>
-  <text x="455" y="443" font-size="10.5" fill="#1f1f1f">인식<tspan dx="5" font-size="9" fill="#8a8f98">FK?→인식</tspan></text>
-  <text x="455" y="458" font-size="10.5" fill="#1f1f1f">제목</text>
-  <text x="455" y="473" font-size="10.5" fill="#1f1f1f">생성일시</text>
-  <text x="455" y="488" font-size="10.5" fill="#1f1f1f">수정일시</text>
+  <rect x="430" y="212" width="250" height="160" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M430,238 V221 Q430,212 439,212 H671 Q680,212 680,221 V238 Z" fill="#0d9488"/>
+  <text x="444" y="230" font-size="12.5" font-weight="700" fill="#fff">인식 <tspan font-size="10" fill-opacity="0.85">scans</tspan></text>
+  <line x1="430" y1="238" x2="680" y2="238" stroke="#cbd2dc"/>
+  <line x1="430" y1="256" x2="680" y2="256" stroke="#eef0f3"/>
+  <text x="442" y="251" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="642" y="251" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(652,241)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="442" y="269" font-size="11" fill="#1f2937">사용자</text><text x="642" y="269" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">user_id</text><g transform="translate(652,259)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="442" y="287" font-size="11" fill="#1f2937">추출 속성</text><text x="668" y="287" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">vision_attrs</text>
+  <text x="442" y="305" font-size="11" fill="#1f2937">매칭 품목</text><text x="636" y="305" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">matched_item_seq</text><g transform="translate(642,295)"><rect width="26" height="13" rx="3" fill="#dbeafe"/><text x="13" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK?</text></g>
+  <text x="442" y="323" font-size="11" fill="#1f2937">신뢰도</text><text x="668" y="323" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">confidence</text>
+  <text x="442" y="341" font-size="11" fill="#1f2937">상태</text><text x="668" y="341" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">status</text>
+  <text x="442" y="359" font-size="11" fill="#1f2937">인식일시</text><text x="668" y="359" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 
-<!-- ===== 대화 메시지 messages ===== -->
+<!-- ============ 알약사전 conversations ============ -->
 <g>
-  <rect x="345" y="545" width="170" height="105" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M345,569 V553 Q345,545 353,545 H507 Q515,545 515,553 V569 Z" fill="#3b5bdb"/>
-  <text x="355" y="561" font-size="12" font-weight="600" fill="#fff">대화 메시지 <tspan font-size="9" fill-opacity="0.7">messages</tspan></text>
-  <text x="355" y="583" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="355" y="598" font-size="10.5" fill="#1f1f1f">대화<tspan dx="5" font-size="9" fill="#8a8f98">FK→알약사전</tspan></text>
-  <text x="355" y="613" font-size="10.5" fill="#1f1f1f">역할<tspan dx="5" font-size="9" fill="#8a8f98">사용자/AI</tspan></text>
-  <text x="355" y="628" font-size="10.5" fill="#1f1f1f">내용</text>
-  <text x="355" y="643" font-size="10.5" fill="#1f1f1f">작성일시</text>
+  <rect x="430" y="400" width="250" height="160" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M430,426 V409 Q430,400 439,400 H671 Q680,400 680,409 V426 Z" fill="#0d9488"/>
+  <text x="444" y="418" font-size="12.5" font-weight="700" fill="#fff">알약사전 <tspan font-size="10" fill-opacity="0.85">conversations</tspan></text>
+  <line x1="430" y1="426" x2="680" y2="426" stroke="#cbd2dc"/>
+  <line x1="430" y1="444" x2="680" y2="444" stroke="#eef0f3"/>
+  <text x="442" y="439" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="642" y="439" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(652,429)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="442" y="457" font-size="11" fill="#1f2937">사용자</text><text x="642" y="457" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">user_id</text><g transform="translate(652,447)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="442" y="475" font-size="11" fill="#1f2937">품목코드</text><text x="636" y="475" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">pill_item_seq</text><g transform="translate(642,465)"><rect width="26" height="13" rx="3" fill="#dbeafe"/><text x="13" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK?</text></g>
+  <text x="442" y="493" font-size="11" fill="#1f2937">인식</text><text x="636" y="493" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">scan_id</text><g transform="translate(642,483)"><rect width="26" height="13" rx="3" fill="#dbeafe"/><text x="13" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK?</text></g>
+  <text x="442" y="511" font-size="11" fill="#1f2937">제목</text><text x="668" y="511" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">title</text>
+  <text x="442" y="529" font-size="11" fill="#1f2937">생성일시</text><text x="668" y="529" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
+  <text x="442" y="547" font-size="11" fill="#1f2937">수정일시</text><text x="668" y="547" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">updated_at</text>
 </g>
 
-<!-- ===== 요약 summaries ===== -->
+<!-- ============ 대화 메시지 messages ============ -->
 <g>
-  <rect x="540" y="545" width="190" height="120" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M540,569 V553 Q540,545 548,545 H722 Q730,545 730,553 V569 Z" fill="#3b5bdb"/>
-  <text x="550" y="561" font-size="12" font-weight="600" fill="#fff">요약 · 누적 <tspan font-size="9" fill-opacity="0.7">summaries</tspan></text>
-  <text x="550" y="583" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="550" y="598" font-size="10.5" fill="#1f1f1f">대화<tspan dx="5" font-size="9" fill="#8a8f98">FK→알약사전</tspan></text>
-  <text x="550" y="613" font-size="10.5" fill="#1f1f1f">버전<tspan dx="5" font-size="9" fill="#8a8f98">v1→v2…</tspan></text>
-  <text x="550" y="628" font-size="10.5" fill="#1f1f1f">내용</text>
-  <text x="550" y="643" font-size="10.5" fill="#1f1f1f">작성일시</text>
-  <text x="550" y="658" font-size="9.5" fill="#8a8f98">고유(대화 + 버전)</text>
+  <rect x="430" y="588" width="160" height="124" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M430,614 V597 Q430,588 439,588 H581 Q590,588 590,597 V614 Z" fill="#0d9488"/>
+  <text x="444" y="606" font-size="11.5" font-weight="700" fill="#fff">대화 <tspan font-size="9.5" fill-opacity="0.85">messages</tspan></text>
+  <line x1="430" y1="614" x2="590" y2="614" stroke="#cbd2dc"/>
+  <line x1="430" y1="632" x2="590" y2="632" stroke="#eef0f3"/>
+  <text x="442" y="627" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="552" y="627" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(562,617)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="442" y="645" font-size="11" fill="#1f2937">대화</text><text x="540" y="645" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">conversation_id</text><g transform="translate(550,635)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="442" y="663" font-size="11" fill="#1f2937">역할</text><text x="578" y="663" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">role</text>
+  <text x="442" y="681" font-size="11" fill="#1f2937">내용</text><text x="578" y="681" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">content</text>
+  <text x="442" y="699" font-size="11" fill="#1f2937">작성일시</text><text x="578" y="699" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 
-<!-- ===== 약 pills ===== -->
+<!-- ============ 요약 summaries ============ -->
 <g>
-  <rect x="775" y="185" width="210" height="150" rx="8" fill="#f4f5f7" stroke="#d4d8e0"/>
-  <path d="M775,209 V193 Q775,185 783,185 H977 Q985,185 985,193 V209 Z" fill="#495057"/>
-  <text x="785" y="201" font-size="12" font-weight="600" fill="#fff">약 · 식약처 캐시 <tspan font-size="9" fill-opacity="0.7">pills</tspan></text>
-  <text x="785" y="223" font-size="10.5" font-weight="600" fill="#1f1f1f">품목코드<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="785" y="238" font-size="10.5" fill="#1f1f1f">제품명</text>
-  <text x="785" y="253" font-size="10.5" fill="#1f1f1f">제조사</text>
-  <text x="785" y="268" font-size="10.5" fill="#1f1f1f">구분<tspan dx="5" font-size="9" fill="#8a8f98">일반/전문</tspan></text>
-  <text x="785" y="283" font-size="10.5" fill="#1f1f1f">모양 · 색 · 각인 · 분할선</text>
-  <text x="785" y="298" font-size="10.5" fill="#1f1f1f">효능 · 용법 · 주의</text>
-  <text x="785" y="313" font-size="10.5" fill="#1f1f1f">원본 JSON</text>
-  <text x="785" y="328" font-size="10.5" fill="#1f1f1f">조회일시</text>
+  <rect x="610" y="588" width="160" height="142" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M610,614 V597 Q610,588 619,588 H761 Q770,588 770,597 V614 Z" fill="#0d9488"/>
+  <text x="624" y="606" font-size="11.5" font-weight="700" fill="#fff">요약 <tspan font-size="9.5" fill-opacity="0.85">summaries</tspan></text>
+  <line x1="610" y1="614" x2="770" y2="614" stroke="#cbd2dc"/>
+  <line x1="610" y1="632" x2="770" y2="632" stroke="#eef0f3"/>
+  <text x="622" y="627" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="732" y="627" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(742,617)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="622" y="645" font-size="11" fill="#1f2937">대화</text><text x="720" y="645" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">conversation_id</text><g transform="translate(730,635)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="622" y="663" font-size="11" fill="#1f2937">버전</text><text x="758" y="663" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">version</text>
+  <text x="622" y="681" font-size="11" fill="#1f2937">내용</text><text x="758" y="681" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">content</text>
+  <text x="622" y="699" font-size="11" fill="#1f2937">작성일시</text><text x="758" y="699" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
+  <text x="622" y="719" font-size="8.5" fill="#9aa3af">고유 unique(conversation_id, version)</text>
 </g>
 
-<!-- ===== 증상 추천 symptom_queries ===== -->
+<!-- ============ 약 pills ============ -->
 <g>
-  <rect x="775" y="470" width="210" height="105" rx="8" fill="#f4f5f7" stroke="#d4d8e0" stroke-dasharray="5 4"/>
-  <path d="M775,494 V478 Q775,470 783,470 H977 Q985,470 985,478 V494 Z" fill="#3b5bdb" fill-opacity="0.75"/>
-  <text x="785" y="486" font-size="12" font-weight="600" fill="#fff">증상 추천 · 선택 <tspan font-size="9" fill-opacity="0.7">symptom_queries</tspan></text>
-  <text x="785" y="508" font-size="10.5" font-weight="600" fill="#1f1f1f">id<tspan dx="5" font-size="9" font-weight="400" fill="#8a8f98">PK</tspan></text>
-  <text x="785" y="523" font-size="10.5" fill="#1f1f1f">사용자<tspan dx="5" font-size="9" fill="#8a8f98">FK→계정</tspan></text>
-  <text x="785" y="538" font-size="10.5" fill="#1f1f1f">증상 텍스트</text>
-  <text x="785" y="553" font-size="10.5" fill="#1f1f1f">결과<tspan dx="5" font-size="9" fill="#8a8f98">JSON · OTC</tspan></text>
-  <text x="785" y="568" font-size="10.5" fill="#1f1f1f">작성일시</text>
+  <rect x="826" y="212" width="290" height="178" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
+  <path d="M826,238 V221 Q826,212 835,212 H1107 Q1116,212 1116,221 V238 Z" fill="#475569"/>
+  <text x="840" y="230" font-size="12.5" font-weight="700" fill="#fff">약 (식약처 캐시) <tspan font-size="10" fill-opacity="0.85">pills</tspan></text>
+  <line x1="826" y1="238" x2="1116" y2="238" stroke="#cbd2dc"/>
+  <line x1="826" y1="256" x2="1116" y2="256" stroke="#eef0f3"/>
+  <text x="838" y="251" font-size="11" font-weight="700" fill="#1f2937">품목코드</text><text x="1078" y="251" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">item_seq</text><g transform="translate(1088,241)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="838" y="269" font-size="11" fill="#1f2937">제품명</text><text x="1104" y="269" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">item_name</text>
+  <text x="838" y="287" font-size="11" fill="#1f2937">제조사</text><text x="1104" y="287" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">entp_name</text>
+  <text x="838" y="305" font-size="11" fill="#1f2937">구분(일반/전문)</text><text x="1104" y="305" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">is_otc</text>
+  <text x="838" y="323" font-size="11" fill="#1f2937">모양·색·각인·분할선</text><text x="1104" y="323" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">shape, color, mark...</text>
+  <text x="838" y="341" font-size="11" fill="#1f2937">효능·용법·주의</text><text x="1104" y="341" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">efcy, usage, caution</text>
+  <text x="838" y="359" font-size="11" fill="#1f2937">원본 데이터</text><text x="1104" y="359" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">raw_json</text>
+  <text x="838" y="377" font-size="11" fill="#1f2937">조회일시</text><text x="1104" y="377" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">fetched_at</text>
 </g>
 
-<!-- cardinality labels -->
-<g font-size="11" fill="#6b7280" font-weight="600">
-  <text x="551" y="140">1</text><text x="551" y="164">N</text>
-  <text x="438" y="70">1</text><text x="140" y="180">1</text>
-  <text x="486" y="120">1</text><text x="452" y="424">N</text>
-  <text x="551" y="322">1</text><text x="551" y="356">1</text>
-  <text x="516" y="512">1</text><text x="434" y="540">N</text>
-  <text x="596" y="512">1</text><text x="636" y="540">N</text>
-  <text x="652" y="224">N</text><text x="766" y="224">1</text>
-  <text x="652" y="414">N</text><text x="766" y="296">1</text>
-  <text x="136" y="336">1</text><text x="136" y="356">N</text>
-  <text x="186" y="336">1</text><text x="326" y="356">N</text>
+<!-- ============ 증상 추천 symptom_queries (선택) ============ -->
+<g>
+  <rect x="826" y="460" width="290" height="124" rx="9" fill="#ffffff" stroke="#9bd5cd" stroke-dasharray="5 4"/>
+  <path d="M826,486 V469 Q826,460 835,460 H1107 Q1116,460 1116,469 V486 Z" fill="#0d9488" fill-opacity="0.8"/>
+  <text x="840" y="478" font-size="12" font-weight="700" fill="#fff">증상 추천 (선택) <tspan font-size="9.5" fill-opacity="0.85">symptom_queries</tspan></text>
+  <line x1="826" y1="486" x2="1116" y2="486" stroke="#e3eeec"/>
+  <line x1="826" y1="504" x2="1116" y2="504" stroke="#eef0f3"/>
+  <text x="838" y="499" font-size="11" font-weight="700" fill="#1f2937">번호</text><text x="1078" y="499" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">id</text><g transform="translate(1088,489)"><rect width="20" height="13" rx="3" fill="#fde68a"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#92400e">PK</text></g>
+  <text x="838" y="517" font-size="11" fill="#1f2937">사용자</text><text x="1078" y="517" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">user_id</text><g transform="translate(1088,507)"><rect width="20" height="13" rx="3" fill="#dbeafe"/><text x="10" y="9.5" font-size="7.5" font-weight="700" text-anchor="middle" fill="#1e40af">FK</text></g>
+  <text x="838" y="535" font-size="11" fill="#1f2937">증상</text><text x="1104" y="535" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">symptom_text</text>
+  <text x="838" y="553" font-size="11" fill="#1f2937">결과(추천 OTC)</text><text x="1104" y="553" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">result</text>
+  <text x="838" y="571" font-size="11" fill="#1f2937">작성일시</text><text x="1104" y="571" font-size="9.5" text-anchor="end" fill="#9aa3af" font-family="ui-monospace,Consolas,monospace">created_at</text>
 </g>
 </svg>
