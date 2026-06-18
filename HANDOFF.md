@@ -1,7 +1,7 @@
 ---
 status: 개발
-updated: 2026-06-17
-summary: 데이터 모델 v1 확정(docs/ERD.md·ERD.svg·ERD.png, PostgreSQL 대상) — 프로토타입은 서버 미구현(임시 저장). 백엔드 정본은 헥사고날(apps/도메인)로 결정했으나 아직 main 미반영(현 main은 계층형 빈 스캐폴드). 협업 골격 M0 완료, 로컬 커밋 push 대기.
+updated: 2026-06-18
+summary: 프론트 프로토타입 UI 5화면(홈·내 기록·약품 상세·기타·내 정보 입력) 구현 + 건강정보 localStorage 저장/온보딩 연결(ERD를 lib/types.ts 타입으로). 더미 데이터 단계 — 내 기록·약품 상세·세션→대화·증상별 추천은 미연결. ERD svg/png 폐기(md만 유지). 백엔드 정본 헥사고날 결정은 여전히 main 미반영. feat/frontend-prototype 브랜치 로컬 커밋(push 대기).
 repo: TEAM-Cursor/pill_recognition
 ---
 
@@ -10,6 +10,8 @@ repo: TEAM-Cursor/pill_recognition
 > 작업 세션 끝낼 때마다 갱신. 위 frontmatter가 상태의 단일 원본. (CONVENTIONS §4·§5)
 
 ## 마지막 작업
+- **프론트 프로토타입 UI + 건강정보 저장 (2026-06-18)**: `frontend/src`에 5화면 구현 — 홈(카메라 뷰파인더)·내 기록(`cabinet`)·약품 상세(`result`)·기타(`more`)·내 정보 입력(`profile`). 다크+teal 디자인 토큰(`styles/theme.css`), 하단 탭바, 알약 이미지(`components/PillImage.tsx`, 모양·색 SVG), 화면 전환은 라우터 없이 `App.tsx` `useState`. **건강정보만 실연결**: `lib/types.ts`(ERD→TS 타입)·`lib/storage.ts`(localStorage, 시드 dev 유저 id=1)로 내 정보 입력 저장/불러오기 + 온보딩 분기(정보 없으면 입력화면부터). 화면값↔ERD 매핑(나이↔birthYear·여성↔F·약 텍스트↔medications 1:N). typecheck·lint·build 통과. **나머지(내 기록·약품 상세·세션 카드·증상별 추천)는 더미·미연결.**
+- **ERD svg/png 폐기 (2026-06-18)**: `docs/ERD.svg`·`docs/ERD.png` 삭제, `docs/ERD.md`만 유지. 편집은 대화 시각화 위젯으로 진행키로. 논의 중 모델 변경: `summaries`(버전 누적 요약) 테이블 제거 → `conversations.summary`(한 줄 요약)로 흡수, 대화 세션 개념 정리. **단 ERD.md 본문엔 아직 미반영** — 추후 갱신 필요.
 - **ERD 다이어그램 시각화 (2026-06-17)**: [docs/ERD.svg](docs/ERD.svg)(벡터) + [docs/ERD.png](docs/ERD.png)(3800×2368, Edge 헤드리스로 래스터화) 추가. 한/영 컬럼 병기, 까마귀발 관계 표기(1·0..1·N·0..N), PK/FK/FK?/UQ 배지, 기능별 색 그룹(계정·건강 / 인식·대화 / 약), 범례 상세화. SVG 수정 시 동일 Edge 명령으로 PNG 재생성. 커밋 `b0da2aa`까지 로컬 main 머지(push 안 함).
 - **백엔드 폴더 구조 정본 결정 (2026-06-17)**: worktree마다 구조가 갈려 있음 확인 — 현 main/이 worktree는 계층형 `backend/app/{auth,core,guidance,pill}`(빈 스캐폴드), 다른 worktree(`pedantic-ritchie`)는 헥사고날 `backend/apps/<도메인>/{adapter,app,domain,tests}`. **정본은 헥사고날로 결정**(아직 main 미반영). ERD는 데이터 모델이라 폴더 구조와 독립 — 단 헥사고날에선 도메인 경계 넘는 FK는 DB 제약이 아니라 논리 ID 참조로 봐야 함.
 - **데이터 모델 v1 확정 (2026-06-17)**: 앱 핵심 기능 기준 ERD 설계 → [docs/ERD.md](docs/ERD.md) 신설(mermaid 다이어그램 + DDL + 관계 + 결정). 대상 DB PostgreSQL. 결정: ①계정은 이메일+비번 스키마만 두고 프로토타입 인증 미구현(시드 dev 유저) ②촬영 이미지 서버 미저장(vision_attrs만) ③**프로토타입 단계에선 서버/DB 미구현, 프론트 임시 저장으로 진행**. PLAN.md 기술결정에 반영·링크.
@@ -22,6 +24,8 @@ repo: TEAM-Cursor/pill_recognition
 - **GitHub push 완료**: private repo `bestcow/pill_recognition` 생성, `main`+`archive/expo-m0`+`expo-m0-final` push. CODEOWNERS는 팀원 아이디 미정이라 전부 `@bestcow`로 임시.
 
 ## 다음 할 일
+- **프론트 세부 구현(진행 중)**: ①증상별 약 추천 화면(기타에서 진입, `symptom_queries`) ②세션→개별 대화 화면(말풍선+요약+입력, `messages`) ③내 기록·약품 상세를 더미 대신 저장소 데이터로 연결.
+- **ERD.md 본문 갱신**: `summaries` 테이블 삭제 → `conversations.summary` 흡수, "대화 세션" 명칭. (코드/논의와 문서 정합 — CONVENTIONS §1 "코드가 정답")
 - **(사람)** 팀원 4명 GitHub 아이디 확정되면 CODEOWNERS의 `@bestcow`를 담당자별로 교체 + 4명 collaborator(write) 추가. (org Base permissions를 Write로 두면 collaborator 추가 없이도 push 가능)
 - **(사람)** 각 팀원: `backend/.env.example` → `backend/.env` 복사 후 키 채우기. 실제 키는 비번관리자/DM으로 공유(평문·커밋 금지).
 - **(사람)** 테스트 PR 1개로 `check`(backend·frontend) status check 등록 → `main` branch protection(승인1·Require Code Owners·status check·force push 차단) → Automatically delete head branches. 상세 [CONTRIBUTING.md](CONTRIBUTING.md) §5.
