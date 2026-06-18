@@ -9,7 +9,7 @@
 **범위 (포함)**
 - 온보딩: 카메라 권한 → 개인정보 입력 (최초 1회).
 - 홈 = 카메라(브라우저 `getUserMedia`) 뷰파인더에 알약을 맞추면 캡처 → 인식.
-- 결과 = LLM 텍스트 안내. **답변마다 "요약" 버튼** → 대화 내용을 문서로 요약, 질문이 쌓일 때마다 **새 버전(v1→v2→…)** 누적 생성.
+- 결과 = LLM 텍스트 안내. 대화 내용은 **한 줄 요약**(`conversations.summary`)으로 저장돼 '내 기록' 목록에 표시된다.
 - 내비게이션: 알약사전(기록 열람·이어쓰기) / 홈(카메라) / 기타(내 정보, 증상별 약 추천).
 
 **현재 단계**: 협업 골격(M0) 완료. 더미/실연동 기능 코드는 다음 단계.
@@ -24,7 +24,7 @@
 - **LLM / 비전**: Claude (Anthropic) — 비전+텍스트 단일 모델, 백엔드에서 호출.
 - **알약 인식 파이프라인**: 낱알식별 API는 **이미지를 직접 못 받고** 색/모양/각인/분할선 등 **텍스트 속성으로 검색** → ① 비전 LLM이 사진에서 각인·색·모양·분할선 추출 → ② 낱알식별 API로 품목 매칭 → ③ 품목코드로 DUR·e약은요 조회.
 - **공공데이터포털 3종**(인증키 필요, 백엔드 `.env`): ①의약품 낱알식별 정보 ②의약품안전사용서비스(DUR) ③의약품개요정보(e약은요).
-- **데이터 모델 (2026-06-17 확정)**: 대상 DB **PostgreSQL**. 전체 ERD는 [docs/ERD.md](docs/ERD.md). 핵심: `users`(계정) · `health_profiles`+`medications`+`allergies`(건강정보) · `pills`(식약처 캐시) · `scans`(인식) · `conversations`+`messages`+`summaries`(알약사전/대화/요약). **단 프로토타입 단계에선 서버/DB를 실제 구현하지 않고** 프론트 임시 저장(localStorage 등)으로 진행, 추후 이 ERD대로 백엔드 영속화.
+- **데이터 모델 (2026-06-17 확정)**: 대상 DB **PostgreSQL**. 전체 ERD는 [docs/ERD.md](docs/ERD.md). 핵심: `users`(계정) · `health_profiles`+`medications`+`allergies`(건강정보) · `pills`(식약처 캐시) · `scans`(인식) · `conversations`+`messages`(대화 세션·메시지, 한 줄 요약은 `conversations.summary`). **단 프로토타입 단계에선 서버/DB를 실제 구현하지 않고** 프론트 임시 저장(localStorage 등)으로 진행, 추후 이 ERD대로 백엔드 영속화.
 - **개인 건강정보 저장**: 초기 프로토타입은 브라우저 `localStorage`(서버 미전송). 서버 영속화 시점의 목표 스키마는 [docs/ERD.md](docs/ERD.md).
 - **인증**: 목표는 이메일+비밀번호 자체 계정. 프로토타입에선 미구현 — 시드 dev 유저 1명에 데이터 연결, 로그인은 추후.
 - **촬영 이미지**: 서버 미저장. 비전 LLM 추출 속성(`scans.vision_attrs`)만 보관.
@@ -32,7 +32,7 @@
 - **협업 구조**: 프로젝트 1개 = GitHub repo 1개. GitHub Flow(rebase 없음) + GitHub Desktop. main 보호·CODEOWNERS·PR·CI(`.github/`)로 초보 실수 차단. 상세는 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **UI 기본값 (확정, 변경 가능)**
-- 인식 성공 대화는 알약사전에 자동 저장 · 요약 버튼은 LLM 답변마다 · 요약 문서는 누적형(v3 = v1+v2+신규) · 증상별 약 추천은 OTC 한정 + 면책 문구 · 권한 거부 시 안내 후 재요청.
+- 인식 성공 대화는 '내 기록'에 자동 저장 · 대화는 **한 줄 요약**으로 목록 표시 · 증상별 약 추천은 OTC 한정 + 면책 문구 · 권한 거부 시 안내 후 재요청.
 
 ## 마일스톤
 - [x] M0 — 협업 스캐폴드(FastAPI+React) + CI green. backend `/health`·frontend 빌드 검증 통과

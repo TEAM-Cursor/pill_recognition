@@ -3,9 +3,10 @@
 > 날짜별 굵직한 변경 한 줄. 세세한 커밋은 git log. (CONVENTIONS §3)
 
 ## 2026-06-18
-- 프론트 프로토타입 UI 5화면 구현(홈·내 기록·약품 상세·기타·내 정보 입력): 다크+teal, 모바일 셸, 하단 탭바, 알약 이미지(SVG), `useState` 화면 전환. 더미 데이터.
+- 프론트 프로토타입 UI 6화면 구현(홈·내 기록·약품 상세·기타·내 정보 입력·증상별 추천): 라이트 테마 + Pretendard 폰트, 모바일 셸, 하단 탭바, 알약 이미지(SVG), `useState` 화면 전환. 더미 데이터.
 - 건강정보 `localStorage` 저장/불러오기 + 온보딩 분기. ERD를 `frontend/src/lib/types.ts` 타입으로 옮김, 화면값↔DB값 매핑(나이↔출생연도·약 텍스트↔`medications` 1:N).
-- ERD 다이어그램 `docs/ERD.svg`·`docs/ERD.png` 폐기 → `docs/ERD.md`만 유지(시각화는 대화 위젯으로 대체). 요약 모델 변경: `summaries` 테이블 → `conversations.summary` 한 줄 요약으로 흡수(문서 미반영, 추후 ERD.md 갱신 예정).
+- 약품 상세를 "요약 + 대화 세션 목록 + 새 대화"로 재구성. 증상별 약 추천 화면 신설(`pages/symptom`, OTC 추천 + 면책).
+- ERD v1.1: `summaries` 테이블 제거 → `conversations.summary`(한 줄 요약) 흡수, `conversations.title` 제거, "대화 세션" 개념(테이블 10→9). `docs/ERD.svg`·`ERD.png` 재생성(Edge 2× 래스터화), PLAN 요약 정책을 한 줄 요약으로 정합. 6관점 워크플로 평가로 valid 지적만 반영.
 
 ## 2026-06-17
 - 데이터 모델 v1 확정: [docs/ERD.md](docs/ERD.md) 신설(PostgreSQL 대상, 테이블 10개). 결정: 계정/이미지 서버 미저장 정책 + **프로토타입은 서버 미구현, 프론트 임시 저장**. PLAN 기술결정에 반영.

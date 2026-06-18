@@ -5,10 +5,11 @@ import HomePage from './pages/home/HomePage'
 import MorePage from './pages/more/MorePage'
 import ResultPage from './pages/result/ResultPage'
 import ProfilePage from './pages/profile/ProfilePage'
+import SymptomPage from './pages/symptom/SymptomPage'
 import { hasHealth } from './lib/storage'
 
 /* 프로토타입: 라우터 없이 화면 상태로 전환. */
-type Screen = Tab | 'result' | 'profile'
+type Screen = Tab | 'result' | 'profile' | 'symptom'
 
 export default function App() {
   // 건강정보가 없으면 온보딩(내 정보 입력)부터, 있으면 홈부터.
@@ -21,9 +22,13 @@ export default function App() {
       {screen === 'cabinet' && <CabinetPage onOpen={() => setScreen('result')} />}
       {screen === 'home' && <HomePage />}
       {screen === 'more' && (
-        <MorePage onProfile={() => { setProfileFrom('more'); setScreen('profile') }} />
+        <MorePage
+          onProfile={() => { setProfileFrom('more'); setScreen('profile') }}
+          onSymptom={() => setScreen('symptom')}
+        />
       )}
       {screen === 'result' && <ResultPage onBack={() => setScreen('cabinet')} />}
+      {screen === 'symptom' && <SymptomPage onBack={() => setScreen('more')} />}
       {screen === 'profile' && (
         <ProfilePage
           onDone={() => setScreen(profileFrom === 'more' ? 'more' : 'home')}

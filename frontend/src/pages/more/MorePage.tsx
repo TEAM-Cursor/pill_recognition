@@ -1,7 +1,7 @@
 import { PersonIcon, MedKitIcon, ChevronRight } from '../../components/icons'
 
 /* 기타 = 메뉴 (내 정보 입력 / 증상별 약 추천) */
-export default function MorePage({ onProfile }: { onProfile: () => void }) {
+export default function MorePage({ onProfile, onSymptom }: { onProfile: () => void; onSymptom: () => void }) {
   return (
     <div className="screen screen--scroll">
       <h1 className="page-title">기타</h1>
@@ -16,7 +16,7 @@ export default function MorePage({ onProfile }: { onProfile: () => void }) {
           <span className="more-chev"><ChevronRight /></span>
         </button>
 
-        <button className="more-item">
+        <button className="more-item" onClick={onSymptom}>
           <span className="more-icon"><MedKitIcon /></span>
           <span>
             <div className="more-title">증상별 약 추천</div>

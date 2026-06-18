@@ -1,19 +1,20 @@
 /* ===== pill_recognition · 디자인 토큰 + 전역 + 공통 컴포넌트 =====
-   다크 테마 + teal 액센트. 모바일 폭(440px) 중앙 정렬 앱 셸. */
+   라이트 테마 + teal 액센트. 모바일 폭(440px) 중앙 정렬 앱 셸. */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
 :root {
-  --bg: #0a0b0d;
-  --bg-elev: #15171a;
-  --bg-elev-2: #1d2024;
-  --border: #2a2e34;
-  --border-strong: #3d444c;
-  --text: #f1f3f4;
-  --text-dim: #8b9298;
-  --text-faint: #5d646b;
-  --accent: #16c2a8;
-  --accent-deep: #0d9488;
-  --accent-soft: rgba(22, 194, 168, 0.13);
-  --accent-line: rgba(22, 194, 168, 0.35);
+  --bg: #eef2f3;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #e7edee;
+  --border: #dde4e6;
+  --border-strong: #c4ced0;
+  --text: #16201f;
+  --text-dim: #5d6b6c;
+  --text-faint: #93a0a0;
+  --accent: #0fae97;
+  --accent-deep: #0b8f7c;
+  --accent-soft: rgba(15, 174, 151, 0.12);
+  --accent-line: rgba(15, 174, 151, 0.30);
   --radius: 16px;
 }
 
@@ -21,9 +22,9 @@
 html, body, #root { margin: 0; height: 100%; }
 
 body {
-  background: #000;
+  background: #dde4e5;
   color: var(--text);
-  font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,7 +37,7 @@ button { font-family: inherit; }
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
+  background: var(--bg) linear-gradient(180deg, rgba(15, 174, 151, 0.08), transparent 240px);
   position: relative;
   overflow: hidden;
 }
@@ -75,11 +76,30 @@ button { font-family: inherit; }
 
 .btn-primary {
   width: 100%; padding: 16px;
-  background: var(--bg-elev-2); color: var(--text);
-  border: 1px solid var(--border); border-radius: 14px;
-  font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px;
+  background: linear-gradient(180deg, #14bfa6, #0fa68f); color: #ffffff;
+  border: none; border-radius: 14px;
+  font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 6px;
 }
-.btn-primary:hover { background: #23272c; }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:disabled { filter: none; opacity: 0.4; cursor: default; }
+
+.input--area { min-height: 84px; resize: none; line-height: 1.5; font-family: inherit; }
+
+/* 증상별 추천 결과 */
+.rec-list { display: flex; flex-direction: column; gap: 10px; }
+.rec-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+}
+.rec-thumb {
+  width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0;
+  background: var(--bg-elev-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.rec-body { flex: 1; min-width: 0; }
+.rec-name { font-size: 15px; font-weight: 700; }
+.rec-desc { font-size: 12.5px; color: var(--text-dim); margin-top: 3px; }
+.disclaimer { font-size: 11.5px; color: var(--text-faint); line-height: 1.6; margin-top: 18px; }
 
 .card { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 18px; padding: 18px; }
 
@@ -113,17 +133,19 @@ button { font-family: inherit; }
 }
 
 /* ---- 홈 (카메라) ---- */
-.home { flex: 1; display: flex; flex-direction: column; background: #000; }
+.home { flex: 1; display: flex; flex-direction: column; }
 .home-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
 .viewfinder {
   width: 230px; height: 230px;
-  border: 1.5px solid rgba(255, 255, 255, 0.5); border-radius: 24px;
+  border: 1.6px solid var(--accent-line); border-radius: 24px;
+  background: var(--bg-elev);
+  box-shadow: 0 6px 26px rgba(15, 174, 151, 0.12);
   display: flex; align-items: center; justify-content: center;
 }
-.home-caption { color: rgba(255, 255, 255, 0.8); font-size: 14px; font-weight: 600; }
+.home-caption { color: var(--text-dim); font-size: 14px; font-weight: 600; }
 .spinner {
   width: 30px; height: 30px;
-  border: 3px solid rgba(255, 255, 255, 0.25); border-top-color: #fff;
+  border: 3px solid var(--accent-soft); border-top-color: var(--accent);
   border-radius: 50%; animation: spin 0.9s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -206,7 +228,7 @@ button { font-family: inherit; }
 .cab-key { color: var(--text-faint); font-size: 12px; margin-right: 8px; }
 
 /* ---- 기타 (메뉴) ---- */
-.more-list { display: flex; flex-direction: column; gap: 14px; }
+.more-list { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
 .more-item {
   display: flex; align-items: center; gap: 14px;
   background: var(--bg-elev); border: 1px solid var(--border); border-radius: 16px;
