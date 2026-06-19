@@ -106,13 +106,6 @@
   <path d="M1255,421 V690 H290 V608 H274" marker-start="url(#oneD)" marker-end="url(#manyD)"/>
 </g>
 
-<!-- relationship labels -->
-<text x="360" y="338" font-size="9" font-weight="600" fill="#3b5bdb">건강정보 참고</text>
-<text x="650" y="226" font-size="9" font-weight="600" fill="#3b5bdb">건강정보 → 증상추천 반영</text>
-<text x="1020" y="538" font-size="9" font-weight="600" fill="#d97706" text-anchor="middle">대화 증상 → 추천</text>
-<text x="600" y="450" font-size="9" font-weight="600" fill="#0d9488">인식 성공 시 자동 생성</text>
-<text x="470" y="902" font-size="9" font-weight="600" fill="#7c3aed">성분 매칭 → 못 먹는 약 판정</text>
-
 <!-- ============ 계정 users ============ -->
 <g>
   <rect x="600" y="30" width="240" height="120" rx="9" fill="#ffffff" stroke="#cbd2dc"/>
