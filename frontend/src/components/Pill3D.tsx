@@ -20,8 +20,8 @@ function Capsule({ reduce }: { reduce: boolean }) {
       clearcoat: 0.85,
       clearcoatRoughness: 0.22,
     })
-    const top = new THREE.Color('#f6f8f8').convertSRGBToLinear()
-    const bot = new THREE.Color('#1fd0b1').convertSRGBToLinear()
+    const top = new THREE.Color('#f8faf9').convertSRGBToLinear()
+    const bot = new THREE.Color('#2bdcc0').convertSRGBToLinear()
     m.onBeforeCompile = (s) => {
       s.uniforms.uTop = { value: top }
       s.uniforms.uBot = { value: bot }
@@ -73,10 +73,11 @@ export default function Pill3D({ size = 208 }: { size?: number }) {
       <Canvas
         camera={{ position: [0, 0.4, 6.6], fov: 38 }}
         dpr={[1, 2]}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ alpha: true, antialias: true, toneMapping: THREE.NeutralToneMapping, toneMappingExposure: 1.25 }}
         frameloop={reduce ? 'demand' : 'always'}
       >
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.9} />
+        <hemisphereLight intensity={0.55} color="#ffffff" groundColor="#cdeee6" />
         <Environment resolution={128}>
           <Lightformer form="rect" intensity={2.2} position={[3, 4, 5]} scale={[6, 6, 1]} />
           <Lightformer form="rect" intensity={1.1} color="#d6f5ee" position={[-5, -1, -3]} scale={[5, 5, 1]} />
