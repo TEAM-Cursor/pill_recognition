@@ -1,178 +1,105 @@
-/* 홈 = 카메라 뷰파인더가 주인공 (촬영→인식).
-   실제 getUserMedia 없이 내부 상태로 대기/인식중/권한거부 데모. props 없음. */
-import { useState } from 'react'
+/* 홈 = AI가 정리해주는 맞춤 대시보드 (스텁).
+   상단 '오늘의 한마디'(LLM 한 줄)가 주인공, 그 아래 복약·이번 주 요약 카드.
+   본격 대시보드(실데이터/통계)는 후속 스펙. 지금은 더미 + 건강정보로 가볍게 개인화. */
 import PillImage from '../../components/PillImage'
-import { ScanIcon } from '../../components/icons'
+import { loadHealth } from '../../lib/storage'
 import styles from './HomePage.module.css'
 
-type CamState = 'idle' | 'scanning' | 'denied'
-
-const DEMO: { key: CamState; label: string }[] = [
-  { key: 'idle', label: '대기' },
-  { key: 'scanning', label: '인식 중' },
-  { key: 'denied', label: '권한 거부' },
-]
-
-function LockIcon({ size = 26 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="9" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-      <path d="M12 15v2" />
-    </svg>
-  )
+/* 오늘 날짜 — "6월 22일 일요일" */
+function todayLabel(): string {
+  try {
+    return new Intl.DateTimeFormat('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' }).format(
+      new Date(),
+    )
+  } catch {
+    return '오늘'
+  }
 }
 
-function CheckIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  )
+/* 복용 중인 약을 칩으로 (없으면 더미). 프로토타입이라 복약 시점은 더미 상태. */
+type Dose = { name: string; time: string; taken: boolean }
+function buildDoses(): Dose[] {
+  const meds = loadHealth()?.medications ?? []
+  if (meds.length > 0) {
+    const slots = ['아침', '점심', '저녁']
+    return meds.slice(0, 3).map((m, i) => ({ name: m.name, time: slots[i] ?? '수시', taken: i === 0 }))
+  }
+  return [
+    { name: '타이레놀정 500mg', time: '아침', taken: true },
+    { name: '이지엔6프로', time: '점심', taken: false },
+  ]
 }
-
-const TIPS = [
-  '밝은 곳에서 알약 한 알을 평평하게 놓아 주세요.',
-  '글자나 분할선이 보이면 더 정확하게 알려드려요.',
-  '사진은 인식에만 쓰고 따로 저장하지 않아요.',
-]
 
 export default function HomePage() {
-  const [cam, setCam] = useState<CamState>('idle')
+  const doses = buildDoses()
+  const takenCount = doses.filter((d) => d.taken).length
 
   return (
     <div className={styles.home}>
       <header className={styles.greeting}>
-        <h1 className={styles.greetingTitle}>어떤 약인지 함께 살펴볼까요?</h1>
-        <p className={styles.greetingSub}>알약을 비추면 이름과 복약 안내를 찾아드려요.</p>
+        <p className={styles.date}>{todayLabel()}</p>
+        <h1 className={styles.greetingTitle}>오늘도 안녕하세요</h1>
       </header>
 
-      <div className={styles.stage}>
-        <div
-          className={styles.viewfinder}
-          role="img"
-          aria-label={
-            cam === 'denied'
-              ? '카메라 권한이 꺼져 있어요'
-              : cam === 'scanning'
-                ? '알약을 인식하는 중'
-                : '카메라 뷰파인더, 가운데에 알약을 맞춰 주세요'
-          }
-        >
-          <span className={`${styles.corner} ${styles.cornerTL}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.cornerTR}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.cornerBL}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.cornerBR}`} aria-hidden="true" />
-
-          {cam === 'denied' ? (
-            <div className={styles.denied}>
-              <span className={styles.deniedIcon}>
-                <LockIcon />
-              </span>
-              <span className={styles.deniedTitle}>카메라 권한이 필요해요</span>
-              <span className={styles.deniedDesc}>
-                알약을 비추려면 카메라 사용을 허용해 주세요. 사진은 인식에만 쓰여요.
-              </span>
-            </div>
-          ) : cam === 'scanning' ? (
-            <>
-              <div className={styles.spinner} aria-hidden="true" />
-              <span className={styles.scanline} aria-hidden="true" />
-            </>
-          ) : (
-            <div className={styles.silhouette} aria-hidden="true">
-              <PillImage look={{ kind: 'caplet', color: 'var(--accent-line)' }} size={132} />
-            </div>
-          )}
+      {/* 시그니처 — 오늘의 한마디 (LLM 한 줄) */}
+      <section className={styles.spotlight} aria-labelledby="home-spotlight">
+        <div className={styles.spotlightHead}>
+          <span className={styles.spotlightDot} aria-hidden="true" />
+          <span id="home-spotlight" className={styles.spotlightLabel}>오늘의 한마디</span>
         </div>
+        <p className={styles.spotlightBody}>
+          오후엔 수분을 충분히 드세요. 지금 복용 중인 약은 공복 자극이 적은 편이라 식후가 아니어도 괜찮아요.
+        </p>
+      </section>
 
-        {cam !== 'denied' && (
-          <div className={styles.caption}>
-            <span className={styles.captionMain}>
-              {cam === 'scanning' ? '알약을 살펴보는 중이에요' : '가운데 칸에 알약을 맞춰 주세요'}
-            </span>
-            <span className={styles.captionSub}>
-              {cam === 'scanning'
-                ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
-                : '한 알만 평평하게 놓으면 자동으로 인식돼요.'}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className={styles.actions}>
-        {cam === 'denied' ? (
-          <button type="button" className="btn-primary" onClick={() => setCam('idle')}>
-            카메라 권한 다시 시도
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn-primary"
-            disabled={cam === 'scanning'}
-            onClick={() => setCam('scanning')}
-          >
-            <span className={styles.shutter}>
-              <ScanIcon size={20} />
-              {cam === 'scanning' ? '인식하는 중…' : '알약 촬영하기'}
-            </span>
-          </button>
-        )}
-      </div>
-
-      <section className={`card ${styles.tips}`} aria-labelledby="home-tips">
-        <div className={styles.tipsHead}>
-          <span className="badge">촬영 팁</span>
-          <span id="home-tips" className={styles.tipsTitle}>더 정확하게 인식하려면</span>
+      {/* 오늘의 복약 */}
+      <section className={`card ${styles.block}`} aria-labelledby="home-dose">
+        <div className={styles.blockHead}>
+          <h2 id="home-dose" className={styles.blockTitle}>오늘의 복약</h2>
+          <span className={styles.blockMeta}>
+            {takenCount}/{doses.length} 챙김
+          </span>
         </div>
-        <ul className={styles.tipList}>
-          {TIPS.map((tip) => (
-            <li key={tip} className={styles.tipItem}>
-              <span className={styles.tipMark} aria-hidden="true">
-                <CheckIcon />
+        <ul className={styles.doseList}>
+          {doses.map((d) => (
+            <li key={d.name} className={styles.doseItem}>
+              <span className={styles.doseThumb} aria-hidden="true">
+                <PillImage
+                  look={
+                    d.taken
+                      ? { kind: 'capsule', color: 'var(--accent)', color2: 'var(--bg-elev)' }
+                      : { kind: 'capsule', color: 'var(--border-strong)', color2: 'var(--bg-elev-2)' }
+                  }
+                  size={46}
+                />
               </span>
-              {tip}
+              <span className={styles.doseBody}>
+                <span className={styles.doseName}>{d.name}</span>
+                <span className={styles.doseTime}>{d.time}</span>
+              </span>
+              <span className={`${styles.doseState}${d.taken ? ` ${styles.doseStateOn}` : ''}`}>
+                {d.taken ? '복용함' : '예정'}
+              </span>
             </li>
           ))}
         </ul>
       </section>
 
-      <div className={styles.demoBar}>
-        <span className={styles.demoLabel}>데모 상태</span>
-        <div className={styles.demoToggle} role="group" aria-label="데모 상태 전환">
-          {DEMO.map(({ key, label }) => (
-            <button
-              key={key}
-              type="button"
-              className={`${styles.demoBtn} ${cam === key ? styles.demoBtnOn : ''}`}
-              aria-pressed={cam === key}
-              onClick={() => setCam(key)}
-            >
-              {label}
-            </button>
-          ))}
+      {/* 이번 주 요약 */}
+      <section className={styles.stats} aria-label="이번 주 요약">
+        <div className={styles.stat}>
+          <span className={styles.statNum}>80%</span>
+          <span className={styles.statSub}>목표 달성 중</span>
+          <span className={styles.statLabel}>이번 주 복약률</span>
         </div>
-      </div>
+        <div className={styles.stat}>
+          <span className={styles.statNum}>3</span>
+          <span className={styles.statSub}>이번 주</span>
+          <span className={styles.statLabel}>새로 찾아본 약</span>
+        </div>
+      </section>
+
+      <p className={styles.note}>맞춤 정보와 통계는 사용할수록 더 정확해져요.</p>
     </div>
   )
 }

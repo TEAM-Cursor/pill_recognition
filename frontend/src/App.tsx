@@ -4,10 +4,12 @@ import Splash from './components/Splash'
 import TabBar from './components/TabBar'
 import styles from './App.module.css'
 
-/* 탭 순서(좌→우) — 슬라이드 방향 판단용 */
-const TAB_ORDER = ['/cabinet', '/', '/more']
+/* 탭 순서(좌→우) — 슬라이드 방향 판단용. 알약사전·카메라·홈·대화·기타, 홈이 가운데. */
+const TAB_ORDER = ['/cabinet', '/camera', '/', '/chat', '/more']
 import CabinetPage from './pages/cabinet/CabinetPage'
+import CameraPage from './pages/camera/CameraPage'
 import HomePage from './pages/home/HomePage'
+import ChatPage from './pages/chat/ChatPage'
 import MorePage from './pages/more/MorePage'
 import ResultPage from './pages/result/ResultPage'
 import ConversationPage from './pages/conversation/ConversationPage'
@@ -26,7 +28,7 @@ function RootLayout() {
   )
 }
 
-/* 탭 화면(홈·내 기록·기타)에만 하단 탭바를 붙이고, 탭 전환 시 좌우 슬라이드. */
+/* 탭 화면(알약사전·카메라·홈·대화·기타)에만 하단 탭바를 붙이고, 탭 전환 시 좌우 슬라이드. */
 function TabLayout() {
   const location = useLocation()
   const idx = TAB_ORDER.indexOf(location.pathname)
@@ -102,8 +104,10 @@ export default function App() {
       <Routes>
         <Route element={<RootLayout />}>
           <Route element={<TabLayout />}>
-            <Route path="/" element={<HomePage />} />
             <Route path="/cabinet" element={<CabinetRoute />} />
+            <Route path="/camera" element={<CameraPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="/more" element={<MoreRoute />} />
           </Route>
           <Route path="/pill/:id" element={<ResultRoute />} />

@@ -2,7 +2,7 @@ import PillImage, { type PillLook } from '../../components/PillImage'
 import { BookIcon, ChevronRight, ScanIcon } from '../../components/icons'
 import styles from './CabinetPage.module.css'
 
-/* 내 기록 = 알약 기록(알약사전) 목록 (프로토타입: 더미 데이터) */
+/* 알약사전 = 비춰본 알약 기록 목록 (프로토타입: 더미 데이터) */
 type Entry = { id: number; name: string; dosage: string; caution: string; date: string; look: PillLook }
 
 const ENTRIES: Entry[] = [
@@ -43,7 +43,7 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
 
   return (
     <div className="screen screen--scroll">
-      <h1 className="page-title">내 기록</h1>
+      <h1 className="page-title">알약사전</h1>
       <p className="page-sub">
         {isEmpty
           ? '비춰본 알약이 여기에 차곡차곡 모여요'
@@ -57,12 +57,12 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
           </div>
           <p className="state-title">아직 기록이 없어요</p>
           <p className="state-desc">
-            홈에서 알약을 비춰보면 복약 안내와 함께 이곳에 기록으로 남아요. 천천히 시작해 볼까요?
+            카메라로 알약을 비춰보면 복약 안내와 함께 이곳에 기록으로 남아요. 천천히 시작해 볼까요?
           </p>
           <div className="state-action">
             <span className="badge">
               <ScanIcon size={16} />
-              홈에서 알약 비추기
+              카메라로 알약 비추기
             </span>
           </div>
         </div>

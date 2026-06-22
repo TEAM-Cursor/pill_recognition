@@ -61,3 +61,16 @@
     color var(--duration-fast) var(--ease-out),
     transform var(--duration-fast) var(--ease-out);
 }
+
+/* 의료 면책 — 메뉴 아래 조용한 안내 카드 */
+.disclaimer {
+  margin: var(--sp-lg) 0 0;
+  padding: var(--sp-md);
+  background: var(--accent-fog);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
+  font-size: var(--fs-cap);
+  line-height: var(--lh-body);
+  color: var(--text-dim);
+  text-wrap: pretty;
+}

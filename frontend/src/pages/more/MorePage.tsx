@@ -27,6 +27,10 @@ export default function MorePage({ onProfile, onSymptom }: { onProfile: () => vo
           <span className={`more-chev ${styles.chev}`}><ChevronRight /></span>
         </button>
       </div>
+
+      <p className={styles.disclaimer}>
+        약속은 의료 전문가의 진단을 대신할 수 없어요. 중요한 복약 결정은 반드시 의사 또는 약사와 상담하세요.
+      </p>
     </div>
   )
 }
