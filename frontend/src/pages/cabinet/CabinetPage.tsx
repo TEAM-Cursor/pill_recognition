@@ -33,8 +33,13 @@ function AlertIcon({ size = 16 }: { size?: number }) {
   )
 }
 
+/* 이번 주 복약 요약 (프로토타입: 더미 진행률) */
+const WEEK_PCT = 80
+const RING_CIRC = 2 * Math.PI * 32
+
 export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }) {
   const isEmpty = ENTRIES.length === 0
+  const ringOffset = RING_CIRC * (1 - WEEK_PCT / 100)
 
   return (
     <div className="screen screen--scroll">
@@ -62,7 +67,37 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
           </div>
         </div>
       ) : (
-        <div className={styles.list}>
+        <>
+          <section className={styles.summary} aria-label={`이번 주 복약 ${WEEK_PCT}퍼센트`}>
+            <div className={styles.ring}>
+              <svg viewBox="0 0 80 80" className={styles.ringSvg} aria-hidden="true">
+                <circle className={styles.ringTrack} cx="40" cy="40" r="32" />
+                <circle
+                  className={styles.ringFill}
+                  cx="40"
+                  cy="40"
+                  r="32"
+                  strokeDasharray={RING_CIRC}
+                  strokeDashoffset={ringOffset}
+                  transform="rotate(-90 40 40)"
+                />
+              </svg>
+              <div className={styles.ringPct}>
+                {WEEK_PCT}
+                <span className={styles.ringUnit}>%</span>
+              </div>
+            </div>
+            <div className={styles.summaryBody}>
+              <span className={styles.summaryEyebrow}>이번 주 복약</span>
+              <span className={styles.summaryLead}>잘 지키고 있어요</span>
+              <span className={styles.summaryStats}>
+                <b>{ENTRIES.length}</b>건 기록
+                <span className={styles.statDot} aria-hidden="true" />곧 챙길 약 <b>1</b>개
+              </span>
+            </div>
+          </section>
+
+          <div className={styles.list}>
           {ENTRIES.map((e) => (
             <button key={e.id} className={styles.card} onClick={() => onOpen(e.id)}>
               <div className={styles.thumb}>
@@ -96,7 +131,8 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
               </div>
             </button>
           ))}
-        </div>
+          </div>
+        </>
       )}
     </div>
   )

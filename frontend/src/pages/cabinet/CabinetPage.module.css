@@ -1,5 +1,64 @@
 /* 내 기록(알약사전) 화면 — 다정·airy 정제. 값은 전부 토큰. */
 
+/* ---- 이번 주 복약 요약 (디자인 키트 '진행률 링 + 통계' 패턴, 민트 테마) ---- */
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-lg);
+  background: linear-gradient(180deg, var(--accent-soft), var(--bg-elev) 62%);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--sp-md);
+}
+.ring {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+}
+.ringSvg { width: 100%; height: 100%; display: block; }
+.ringTrack { fill: none; stroke: var(--accent-soft); stroke-width: 8; }
+.ringFill { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; }
+.ringPct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.ringUnit { font-size: var(--fs-xs); font-weight: var(--fw-semibold); margin-left: 1px; }
+.summaryBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.summaryEyebrow { font-size: var(--fs-cap); color: var(--text-dim); font-weight: var(--fw-semibold); }
+.summaryLead {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-tight);
+  margin-top: var(--sp-xs);
+}
+.summaryStats {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-top: var(--sp-sm);
+  font-size: var(--fs-cap);
+  color: var(--text-dim);
+}
+.summaryStats b { color: var(--text); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; }
+.statDot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
+
 .list {
   display: flex;
   flex-direction: column;
