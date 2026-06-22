@@ -15,6 +15,8 @@
 | `README.md` | 소개·실행법·환경변수 (외부/신규 관점) | 프로젝트를 처음 받았을 때 |
 | `CONTRIBUTING.md` | Git 초보 팀원용 협업 루틴 | Git 작업하기 전 |
 
+> **상위 팀 인덱스**: 이 repo 바깥 `C:\Team-Seuk`(= `Team-Seuk/Team-Seuk`, private)에 팀 공통 작업 규칙(`CLAUDE.md`)과 프론트 디자인 지침(`DESIGN.md`)이 있다. 프론트 작업 전 `DESIGN.md`를 본다.
+
 ## §2 진실의 원천 + 갱신 대원칙
 
 - 같은 사실이 여러 곳에 있으면 **우선순위**: 구현 상태 = `HANDOFF` · 목표/결정 = `PLAN` · 실행법 = `README`.

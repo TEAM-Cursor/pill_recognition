@@ -2,7 +2,7 @@
 
 ## 스택
 - **백엔드**: FastAPI (Python 3.12+, uv), 헥사고날 구조. `backend/apps/<도메인>/` — `auth/`(로그인·회원), `pill/`(핵심 기능), `guidance/`(복약 안내). 각 도메인은 `adapter/`(inbound·outbound) · `app/`(use_cases·ports·dtos) · `domain/`(entities·value_objects) · `tests/`. DB·공통 설정은 `backend/core/`(위험 공용구역). 진입점 `backend/main.py`.
-- **프론트**: React + TypeScript + Vite. `frontend/src/` — `pages/{auth,pill}/`, `components/`(재사용), `api/`(백엔드 호출).
+- **프론트**: React + TypeScript + Vite. `frontend/src/` — `pages/{auth,pill}/`, `components/`(재사용), `api/`(백엔드 호출). 디자인은 상위 팀 지침 `Team-Seuk/DESIGN.md`(인터뷰 선행·토큰·모션 medium)를 따른다.
 - 공공 API·LLM(Claude) 호출은 **백엔드에서**. 인증키는 `backend/.env`(절대 커밋 금지).
 
 ## 협업 규칙 (GitHub Flow, rebase 없음)

@@ -14,15 +14,21 @@
 
 ## 0. 설치 (처음 한 번만)
 
-1. C 드라이브 바로 밑에 팀 폴더 `C:\Team-Seuk` 생성.
-2. [GitHub Desktop](https://desktop.github.com/) 설치 → GitHub 계정으로 로그인. (Git이 함께 설치되므로 별도 Git 설치 불필요)
-3. 개발 도구 설치:
+> 받을 저장소는 **두 개**다: 팀 공통 인덱스 `Team-Seuk/Team-Seuk`(**private** — 조직(org) 멤버만 보임)와 프로젝트 `Team-Seuk/Yaksok`(**public**). `C:\Team-Seuk` 폴더는 **직접 만들지 말 것** — 아래 clone이 자동으로 만든다(미리 만들면 clone이 거부됨).
+
+1. [GitHub Desktop](https://desktop.github.com/) 설치 → GitHub 계정으로 로그인. (Git이 함께 설치되므로 별도 Git 설치 불필요)
+2. 개발 도구 설치:
    - **uv** (백엔드용): PowerShell 열고 붙여넣기, 끝나면 새 터미널 — `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
    - **Node.js LTS(20+)** (프론트용): https://nodejs.org 에서 LTS 설치.
-4. `File → Clone repository` → 우리 저장소(`Team-Seuk/Yaksok`) 선택 → Local path를 **`C:\Team-Seuk\Yaksok`** 로 지정(부모를 `C:\Team-Seuk`로 고르고 폴더명 `Yaksok`이 붙도록) → `Clone`.
-5. 환경 맞추기 (백엔드·프론트 둘 다):
+3. 저장소 **두 개를 순서대로** clone (인덱스 먼저!):
+   - **3-1. 먼저** `File → Clone repository` → `Team-Seuk/Team-Seuk`(팀 공통 규칙·디자인) → Local path 부모를 **`C:\`** 로 → 경로가 **`C:\Team-Seuk`** 가 되게 → `Clone`.
+   - **3-2. 다음** `File → Clone repository` → `Team-Seuk/Yaksok`(프로젝트) → Local path 부모를 **`C:\Team-Seuk`** 로 → 경로가 **`C:\Team-Seuk\Yaksok`** 가 되게 → `Clone`.
+   - ※ 인덱스를 먼저 받아야 `C:\Team-Seuk`가 깨끗하게 생긴다. 인덱스 repo는 `Yaksok` 폴더를 자동 무시(`.gitignore`)하므로 둘이 섞이지 않는다.
+4. 환경 맞추기 (`C:\Team-Seuk\Yaksok` 안, 백엔드·프론트 둘 다):
    - 백엔드: `cd backend` → `uv sync` → `uv run pytest` (통과하면 OK)
    - 프론트: `cd frontend` → `npm install` → `npm run dev` (화면 뜨면 OK)
+
+> GitHub Desktop 상단 **Current repository** 드롭다운에서 `Team-Seuk`(규칙·디자인 문서) ↔ `Yaksok`(코드 작업)을 전환한다.
 
 ## 1. 매일 작업 루틴 (순서 그대로)
 
@@ -42,11 +48,15 @@
 - **위험 공용구역**(`core`·의존성·CI·공용 컴포넌트/`api`·설정·문서) → **PL 진수택(@suvisdev)** 승인 필수. (PL이 작성자면 백업으로 **PO 이재우(@bestcow)** 가 승인.)
 - 어느 경우든 CI(`backend`·`frontend`)가 **초록**이어야 머지 가능.
 
+### 프론트엔드(FE) 작업이면
+
+화면·UI 작업을 시작하기 전 상위 팀 디자인 지침 **`C:\Team-Seuk\DESIGN.md`**(= `Team-Seuk/Team-Seuk` repo)를 먼저 본다. 새 화면은 거기 "1. 프로젝트 결정" 인터뷰부터 채운 뒤 구현하고, 색·간격·모션은 토큰(CSS 변수)으로, 모션 기본은 medium.
+
 ## 2. 절대 하지 말 것 (DO-NOT)
 
 - ❌ **`main`에서 직접 작업/커밋** — 항상 브랜치를 만든다.
 - ❌ **Force push** — 메뉴에 보여도 누르지 않는다. (히스토리가 날아간다)
-- ❌ **`.env`·비밀키·API 키 커밋** — `.gitignore`가 막지만 직접 추가하지 말 것. (repo는 public이라 한 번 올리면 노출로 간주 → 즉시 키 폐기)
+- ❌ **`.env`·비밀키·API 키 커밋** — `.gitignore`가 막지만 직접 추가하지 말 것. (**Yaksok은 public 저장소**라 한 번 올리면 노출로 간주 → 즉시 키 폐기)
 - ❌ **에러창에서 모르는 버튼 마구 누르기** — 멈추고 팀 리드 호출.
 
 > 🔑 **키가 필요하면**: `backend/.env.example`을 `backend/.env`로 복사한 뒤 값을 채운다. 실제 키 값은 코드·PR·메신저 평문에 올리지 말고 팀 리드에게 받는다(비밀번호 관리자/DM).
