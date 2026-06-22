@@ -73,7 +73,7 @@ button { font-family: inherit; }
 
 /* ---- 앱 셸 ---- */
 .app {
-  max-width: 440px;
+  width: min(440px, 100%);   /* 명시적 너비 — 데스크톱 그리드 중앙배치에서 페이지마다 폭이 달라지는 것 방지(한 폰 규격으로 통일) */
   margin: 0 auto;
   height: 100dvh;            /* 뷰포트 고정 — 내부 영역이 스크롤되도록 (min-height면 콘텐츠만큼 늘어나 스크롤이 죽는다) */
   display: flex;
