@@ -2,6 +2,9 @@
 
 > 날짜별 굵직한 변경 한 줄. 세세한 커밋은 git log. (CONVENTIONS §3)
 
+## 2026-06-23
+- **프론트 모바일 폴리시 패스** (`claude/elastic-pascal-72aa59`, 미커밋): 13화면 3축(모바일 일관성·인터랙션/모션·가독성·접근성[고령]) 전수 감사 → 18파일. 전역: `viewport-fit=cover`(safe-area 실작동)·입력 16px화(iOS 줌 차단, `--fs-input`)·**`--accent-strong #0a7d6c`(흰 글자 5:1 AA) → 버튼·`.bubbleMe`·`.newCard`**·`--text-faint` 4.37:1. 화면별: 320px 반응형·하드코딩 px 토큰화·터치타깃 44·aria(메시지 `role=article` 등)·chat 타이핑 인디케이터+자동스크롤 억제·필수표시 스크린리더 보강. **스크롤바**: 내부 스크롤 영역의 PC용 화살표 버튼 스크롤바 제거(원인=`scrollbar-width` 미상속+Chrome의 webkit 무시) → webkit 단일체계(폭 12px·버튼없음·autohide), 표준은 Firefox 격리. 정체성·구조 불변. typecheck/lint/build 그린 + 실렌더 단언 통과. 실기기 모바일 검증. 스펙 [docs/FRONTEND-POLISH.md](docs/FRONTEND-POLISH.md). (PR로 main 머지)
+
 ## 2026-06-22
 - **프론트엔드 대개편 (M1, `feat/design-overhaul`)**: 정체성=라이트·민트·Pretendard **유지·정제**(무드 다정/부드러운/안심, density airy). ①`theme.css` **토큰 시스템 완성** — 간격·타이포·모션·z·반경 토큰 신설, 하드코딩(24/13/11.5px·버튼 그라데이션) 제거, 솔리드 민트 버튼, `prefers-reduced-motion` 전역. ②**`react-router-dom` 도입** — `App.tsx` useState 화면전환 → 라우터(온보딩 가드·라우터 기반 탭바). ③**개별 대화 화면 신설**(`pages/conversation`). ④6화면 비주얼 폴리시(화면별 CSS Module 분리) + 빈/권한거부/로딩 등 상태 화면. ⑤알약 일러스트 시그니처 강화(`PillImage` 음영·각인·분할선, 하위호환). typecheck·lint·build 그린 + 실렌더 검증. 스펙 [docs/FRONTEND-OVERHAUL.md](docs/FRONTEND-OVERHAUL.md). (브랜치, 미머지)
 - **프로젝트 리네임 `pill_recognition` → `Yaksok`**: 로컬 폴더·GitHub 레포(`Team-Seuk/Yaksok`)·git remote + 코드/문서 표기 전반 통일(문서 제목·FastAPI title·pyproject·index.html·theme.css·`package`=`yaksok-frontend`·`storage.ts` 키 `yaksok:health`). HANDOFF·LOG의 과거 이력 기록은 보존. (PR #11)

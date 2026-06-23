@@ -39,8 +39,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 320px;
-  height: 320px;
+  width: min(320px, 80vw);
+  height: min(320px, 80vw);
   border-radius: var(--radius-pill);
   transform: translate(-50%, -64%);
   background: radial-gradient(circle, var(--accent-line) 0%, transparent 70%);
@@ -101,7 +101,7 @@
 .skip {
   position: absolute;
   bottom: var(--sp-2xl);
-  font-size: var(--fs-cap);
+  font-size: var(--fs-sm);
   color: var(--text-faint);
 }
 

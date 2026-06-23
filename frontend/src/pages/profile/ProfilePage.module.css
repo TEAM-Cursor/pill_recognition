@@ -126,9 +126,21 @@
   margin-bottom: var(--sp-sm);
 }
 .required {
-  margin-left: 2px;
+  margin-left: var(--sp-xs);
   color: var(--accent-deep);
   font-weight: var(--fw-bold);
+}
+/* 스크린리더 전용 — 시각상 '*'만으로 전달되는 '필수'를 보강 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .hint {
   margin-top: var(--sp-sm);

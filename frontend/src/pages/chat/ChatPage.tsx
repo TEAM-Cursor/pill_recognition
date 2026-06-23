@@ -27,21 +27,37 @@ export default function ChatPage() {
   const navigate = useNavigate()
   const [msgs, setMsgs] = useState<Msg[]>([])
   const [draft, setDraft] = useState('')
+  const [typing, setTyping] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  /* 사용자가 위로 스크롤 중이면 자동 하단 스크롤을 억제하기 위한 추적 */
+  const stickToBottom = useRef(true)
 
   const canSend = draft.trim().length > 0
   const empty = msgs.length === 0
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [msgs])
+    if (stickToBottom.current) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [msgs, typing])
+
+  function onScroll() {
+    const el = scrollRef.current
+    if (!el) return
+    /* 바닥 근처(여유 48px)면 자동 스크롤 유지, 위로 올렸으면 억제 */
+    stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 48
+  }
 
   function send(text: string) {
     const t = text.trim()
     if (!t) return
+    stickToBottom.current = true
     setMsgs((m) => [...m, { id: m.length + 1, role: 'me', text: t }])
     setDraft('')
-    setTimeout(() => setMsgs((m) => [...m, { id: m.length + 1, role: 'bot', text: BOT_REPLY }]), 700)
+    setTyping(true)
+    setTimeout(() => {
+      setTyping(false)
+      setMsgs((m) => [...m, { id: m.length + 1, role: 'bot', text: BOT_REPLY }])
+    }, 700)
   }
 
   return (
@@ -51,7 +67,7 @@ export default function ChatPage() {
         <p className={styles.headSub}>약속 도우미</p>
       </header>
 
-      <div className={`result-scroll ${styles.scroll}`}>
+      <div className={`result-scroll ${styles.scroll}`} ref={scrollRef} onScroll={onScroll}>
         {empty ? (
           <div className={styles.empty}>
             <div className={styles.intro}>
@@ -102,7 +118,12 @@ export default function ChatPage() {
             {msgs.map((m) => {
               const me = m.role === 'me'
               return (
-                <div key={m.id} className={`${styles.row}${me ? ` ${styles.rowMe}` : ''}`}>
+                <div
+                  key={m.id}
+                  className={`${styles.row}${me ? ` ${styles.rowMe}` : ''}`}
+                  role="article"
+                  aria-label={me ? '내 메시지' : '약속 도우미의 메시지'}
+                >
                   {!me && (
                     <span className={styles.avatar} aria-hidden="true">
                       <PillImage look={ASSISTANT_LOOK} size={20} />
@@ -112,6 +133,18 @@ export default function ChatPage() {
                 </div>
               )
             })}
+            {typing && (
+              <div className={styles.row} role="status" aria-label="약속 도우미가 입력 중입니다">
+                <span className={styles.avatar} aria-hidden="true">
+                  <PillImage look={ASSISTANT_LOOK} size={20} />
+                </span>
+                <div className={`${styles.bubble} ${styles.bubbleBot} ${styles.typing}`} aria-hidden="true">
+                  <span className={styles.dot} />
+                  <span className={styles.dot} />
+                  <span className={styles.dot} />
+                </div>
+              </div>
+            )}
             <div ref={bottomRef} />
           </div>
         )}

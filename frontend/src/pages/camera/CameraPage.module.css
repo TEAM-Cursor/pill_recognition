@@ -45,8 +45,8 @@
 
 .viewfinder {
   position: relative;
-  width: 264px;
-  height: 264px;
+  width: clamp(200px, 85vw, 264px);
+  height: clamp(200px, 85vw, 264px);
   border-radius: var(--radius-lg);
   background:
     radial-gradient(120% 120% at 50% 28%, var(--accent-fog), transparent 62%),
@@ -138,7 +138,7 @@
   color: var(--text);
 }
 .deniedDesc {
-  font-size: var(--fs-cap);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
   line-height: var(--lh-body);
   max-width: 24ch;

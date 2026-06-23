@@ -44,7 +44,7 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
       ) : (
         <div className={styles.list}>
           {ENTRIES.map((e) => (
-            <button key={e.id} className={styles.card} onClick={() => onOpen(e.id)}>
+            <button key={e.id} className={styles.card} onClick={() => onOpen(e.id)} aria-label={e.name}>
               <div className={styles.thumb}>
                 <PillImage look={e.look} size={44} />
               </div>
