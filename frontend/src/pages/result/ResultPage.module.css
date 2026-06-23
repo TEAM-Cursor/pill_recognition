@@ -93,8 +93,8 @@
 }
 
 .factIcon {
-  width: 38px;
-  height: 38px;
+  width: calc(var(--sp-lg) + var(--sp-md));
+  height: calc(var(--sp-lg) + var(--sp-md));
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   background: var(--accent-soft);
@@ -199,7 +199,7 @@
   width: 100%;
   text-align: left;
   cursor: pointer;
-  background: var(--accent);
+  background: var(--accent-strong);
   border: none;
   border-radius: var(--radius);
   padding: var(--sp-md);
@@ -209,7 +209,7 @@
   transition: background var(--duration-fast) var(--ease-out),
     transform var(--duration-fast) var(--ease-out);
 }
-.newCard:hover { background: var(--accent-deep); }
+.newCard:hover { background: var(--accent-strong-deep); }
 .newCard:active { transform: translateY(1px); }
 
 .newIcon {
@@ -227,13 +227,13 @@
 .newTitle { font-size: var(--fs-sm); font-weight: var(--fw-bold); }
 .newDesc {
   font-size: var(--fs-xs);
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
   margin-top: var(--sp-xs);
 }
-.newChev { display: flex; flex-shrink: 0; color: rgba(255, 255, 255, 0.85); }
+.newChev { display: flex; flex-shrink: 0; color: rgba(255, 255, 255, 0.92); }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(var(--sp-sm)); }
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {

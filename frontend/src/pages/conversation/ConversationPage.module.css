@@ -24,6 +24,8 @@
 
 .scroll {
   padding-top: var(--sp-md);
+  /* 하단 고정 입력창에 마지막 메시지가 가리지 않도록 여유 확보 */
+  scroll-padding-bottom: var(--sp-2xl);
 }
 
 /* 첫 진입 안내 (다정한 톤) */
@@ -81,6 +83,8 @@
   font-size: var(--fs-sm);
   line-height: var(--lh-body);
   white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   padding: var(--sp-md);
   border-radius: var(--radius);
   text-wrap: pretty;
@@ -97,8 +101,8 @@
 
 /* 나: 민트, 오른쪽 꼬리 */
 .bubbleMe {
-  background: var(--accent);
-  border: 1px solid var(--accent);
+  background: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
   color: #ffffff;
   border-top-right-radius: var(--radius-sm);
 }
@@ -109,10 +113,13 @@
   bottom: 0;
   background: var(--bg);
   z-index: var(--z-tabbar);
+  /* 노치 기기 좌우 안전영역 반영 (전역 .composer의 좌우 패딩에 더함) */
+  padding-left: calc(var(--sp-md) + env(safe-area-inset-left));
+  padding-right: calc(var(--sp-md) + env(safe-area-inset-right));
 }
 
 @keyframes pop {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(var(--sp-xs)); }
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -183,7 +183,7 @@ export default function ProfilePage({ onDone, onBack }: { onDone: () => void; on
       <div className={styles.form}>
         <div className={`field ${styles.field}`}>
           <label className={`field-label ${styles.label}`} htmlFor="birthYear">
-            출생연도<span className={styles.required} aria-hidden="true">*</span>
+            출생연도<span className={styles.required} aria-hidden="true">*</span><span className={styles.srOnly}> (필수)</span>
           </label>
           <input
             id="birthYear"
@@ -200,12 +200,12 @@ export default function ProfilePage({ onDone, onBack }: { onDone: () => void; on
         </div>
 
         <div className={`field ${styles.field}`}>
-          <span className={`field-label ${styles.label}`}>성별<span className={styles.required} aria-hidden="true">*</span></span>
+          <span className={`field-label ${styles.label}`}>성별<span className={styles.required} aria-hidden="true">*</span><span className={styles.srOnly}> (필수)</span></span>
           <Segmented options={SEX} value={sex} onChange={setSex} />
         </div>
 
         <div className={`field ${styles.field}`}>
-          <span className={`field-label ${styles.label}`}>임신 / 수유<span className={styles.required} aria-hidden="true">*</span></span>
+          <span className={`field-label ${styles.label}`}>임신 / 수유<span className={styles.required} aria-hidden="true">*</span><span className={styles.srOnly}> (필수)</span></span>
           <Segmented options={PREG} value={preg} onChange={setPreg} />
         </div>
       </div>

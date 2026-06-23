@@ -34,12 +34,15 @@
   --border-strong: #c4ced0;
   --text: #16201f;
   --text-dim: #5d6b6c;
-  --text-faint: #93a0a0;
+  --text-faint: #667373;   /* #93a0a0(2.4:1, AA 미달)→ 4.37:1. --text-dim보다 한 톤 밝게 유지해 위계 보존 */
   --accent: #0fae97;
   --accent-deep: #0b8f7c;
   --accent-soft: rgba(15, 174, 151, 0.12);
   --accent-line: rgba(15, 174, 151, 0.30);
   --accent-fog: rgba(15, 174, 151, 0.08);
+  /* 흰 글자 위 강조 표면(버튼 등) — 민트는 흰 글자 대비 2.8:1로 AA 미달이라 텍스트 표면엔 더 깊은 톤 사용. 비텍스트 강조(라인·필·인디케이터)는 --accent 유지. */
+  --accent-strong: #0a7d6c;       /* white 5.0:1 */
+  --accent-strong-deep: #086a5c;  /* hover/active */
   /* 안전 정보(주의·경고) — 색만으로 전달 금지, 항상 아이콘/텍스트 병기 */
   --warn: #b45309;
   --warn-soft: rgba(180, 83, 9, 0.10);
@@ -62,6 +65,7 @@
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --fs-display: 26px; --fs-h1: 22px; --fs-h2: 18px; --fs-lg: 17px;
   --fs-body: 16px; --fs-sm: 15px; --fs-cap: 13px; --fs-xs: 12px;
+  --fs-input: 16px;   /* 입력류 전용 — iOS Safari 포커스 자동 줌 방지(16px 미만 금지) */
   --fw-regular: 400; --fw-medium: 500; --fw-semibold: 650; --fw-bold: 800;
   --lh-tight: 1.2; --lh-snug: 1.4; --lh-body: 1.65;
 
@@ -77,12 +81,17 @@
   --scrollbar-thumb: rgba(20, 40, 38, 0.28);
 }
 
-/* 데스크톱 기본 스크롤바(두꺼운 PC 바)를 앱처럼 가늘게 + 평소 투명하게.
-   .is-scrolling(스크롤 중)일 때만 thumb가 보인다. main.tsx의 initScrollbarAutohide가 토글. */
-:root { scrollbar-width: thin; scrollbar-color: transparent transparent; }
-.is-scrolling { scrollbar-color: var(--scrollbar-thumb) transparent; }
-
-*::-webkit-scrollbar { width: 6px; height: 6px; }
+/* 스크롤바 — 평소 투명, 스크롤(.is-scrolling) 중에만 thumb 노출, 화살표 버튼 없음.
+   Chromium/Safari: webkit 의사요소로 폭을 정밀 제어(아래 width). 표준 scrollbar-width/color를
+   스크롤 요소에 함께 주면 최신 Chrome(121+)이 webkit을 무시해 폭 조절이 불가능해지므로,
+   표준 속성은 webkit을 안 쓰는 Firefox 전용(@supports)으로 격리한다. */
+@supports (-moz-appearance: none) {
+  * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  .is-scrolling { scrollbar-color: var(--scrollbar-thumb) transparent; }
+}
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-button { display: none; width: 0; height: 0; }   /* PC 증감 화살표 버튼 제거 */
+*::-webkit-scrollbar-corner { background: transparent; }
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb {
   background: transparent;
@@ -157,7 +166,7 @@ h1, h2 { font-family: var(--font-display); }
 .input {
   width: 100%; padding: var(--sp-md);
   background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
-  color: var(--text); font-size: var(--fs-sm);
+  color: var(--text); font-size: var(--fs-input);
   transition: border-color var(--duration-fast) var(--ease-out);
 }
 .input::placeholder { color: var(--text-faint); }
@@ -178,12 +187,12 @@ h1, h2 { font-family: var(--font-display); }
 /* ---- 버튼 (화면당 primary 1개 · 라벨=동작) ---- */
 .btn-primary {
   width: 100%; padding: var(--sp-md); min-height: 44px;
-  background: var(--accent); color: #ffffff;
+  background: var(--accent-strong); color: #ffffff;
   border: none; border-radius: var(--radius-sm);
   font-size: var(--fs-sm); font-weight: var(--fw-bold); cursor: pointer; margin-top: var(--sp-xs);
   transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
 }
-.btn-primary:hover { background: var(--accent-deep); }
+.btn-primary:hover { background: var(--accent-strong-deep); }
 .btn-primary:active { transform: translateY(1px); }
 .btn-primary:disabled { background: var(--border-strong); cursor: default; opacity: 0.7; }
 
@@ -242,8 +251,9 @@ h1, h2 { font-family: var(--font-display); }
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--sp-xs);
   color: var(--text-dim); background: none; border: none; cursor: pointer;
   font-size: var(--fs-xs); padding: var(--sp-sm) 0; position: relative; min-height: 44px;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
 }
+.tab:active { opacity: 0.55; }
 .tab--on { color: var(--text); }
 .tab--on::after {
   content: ''; position: absolute; top: calc(-1 * var(--sp-sm));
@@ -254,7 +264,7 @@ h1, h2 { font-family: var(--font-display); }
 .home { flex: 1; display: flex; flex-direction: column; }
 .home-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-lg); }
 .viewfinder {
-  width: 230px; height: 230px;
+  width: clamp(200px, 70vw, 230px); height: clamp(200px, 70vw, 230px);
   border: 1.6px solid var(--accent-line); border-radius: var(--radius-lg);
   background: var(--bg-elev);
   box-shadow: 0 6px 26px var(--accent-fog);
@@ -315,18 +325,18 @@ h1, h2 { font-family: var(--font-display); }
 }
 .composer {
   display: flex; gap: var(--sp-sm); align-items: center;
-  padding: var(--sp-sm) var(--sp-md) calc(var(--sp-sm) + env(safe-area-inset-bottom));
+  padding: var(--sp-sm) calc(var(--sp-md) + env(safe-area-inset-right)) calc(var(--sp-sm) + env(safe-area-inset-bottom)) calc(var(--sp-md) + env(safe-area-inset-left));
   border-top: 1px solid var(--border);
 }
 .composer .input { border-radius: var(--radius-pill); }
 .send {
   width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
-  background: var(--accent); border: none; cursor: pointer;
+  background: var(--accent-strong); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background var(--duration-fast) var(--ease-out);
+  transition: background var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
 }
-.send:hover { background: var(--accent-deep); }
-.send:disabled { background: var(--border-strong); cursor: default; }
+.send:hover { background: var(--accent-strong-deep); }
+.send:disabled { background: var(--border-strong); cursor: not-allowed; opacity: 0.55; }
 
 /* ---- 개별 대화 (메시지 말풍선) ---- */
 .msg-list { display: flex; flex-direction: column; gap: var(--sp-sm); }

@@ -189,7 +189,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--sp-xs);
 }
 .doseName {
   font-size: var(--fs-sm);
@@ -222,6 +222,9 @@
 .stats {
   display: flex;
   gap: var(--sp-md);
+}
+@media (max-width: 360px) {
+  .stats { flex-direction: column; }
 }
 .stat {
   flex: 1;

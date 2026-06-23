@@ -60,17 +60,21 @@
   gap: var(--sp-sm);
 }
 .name {
+  flex: 1;
+  min-width: 0;
   font-size: var(--fs-h2);
   font-weight: var(--fw-bold);
   letter-spacing: -0.01em;
   line-height: var(--lh-tight);
-  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .chev {
   display: flex;
   color: var(--text-faint);
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: var(--sp-xs);
 }
 .card:hover .chev {
   color: var(--accent);
@@ -96,7 +100,7 @@
   background: var(--accent-soft);
   border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
-  padding: 2px var(--sp-sm);
+  padding: var(--sp-xs) var(--sp-sm);
 }
 
 /* ---- 한 줄 설명 ---- */
