@@ -34,10 +34,7 @@ def create_conversation_endpoint(db: Session = Depends(get_db)) -> ConversationR
 def ask_message(
     conversation_id: str,
     request: AskRequestDto,
-    db: Session = Depends(get_db),  # noqa: B008
-    use_case: AskGuidanceUseCase = Depends(
-        lambda db=Depends(get_db): get_ask_guidance_use_case(db)
-    ),  # noqa: B008, E501
+    use_case: AskGuidanceUseCase = Depends(get_ask_guidance_use_case),  # noqa: B008
 ) -> MessageResponseDto:
     """질문을 보내고 AI 답변을 받는다."""
     try:
