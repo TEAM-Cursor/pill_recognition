@@ -16,6 +16,7 @@ import ConversationPage from './pages/conversation/ConversationPage'
 import ProfilePage from './pages/profile/ProfilePage'
 import SymptomPage from './pages/symptom/SymptomPage'
 import AllPillsPage from './pages/allpills/AllPillsPage'
+import IdentifyResultPage from './pages/identify/IdentifyResultPage'
 import { hasHealth } from './lib/storage'
 
 /* 앱 셸 + 온보딩 가드: 건강정보가 없으면 내 정보 입력(/profile)으로 보낸다. */
@@ -117,6 +118,7 @@ export default function App() {
             <Route path="/more" element={<MoreRoute />} />
           </Route>
           <Route path="/pill/:id" element={<ResultRoute />} />
+          <Route path="/identify" element={<IdentifyResultPage />} />
           <Route path="/conversation/:id" element={<ConversationRoute />} />
           <Route path="/symptom" element={<SymptomRoute />} />
           <Route path="/all-pills" element={<AllPillsRoute />} />

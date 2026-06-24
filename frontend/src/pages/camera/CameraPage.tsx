@@ -4,7 +4,9 @@
 
    연출(서류 캡처용): /camera?stage=shot — 실제 카메라 대신 데모 알약 사진을 띄워 "촬영·인식 중" 모습을 보여준다. */
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import type { ChangeEvent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { ApiError, identifyPill } from '../../lib/api'
 import styles from './CameraPage.module.css'
 
 type CamState = 'loading' | 'live' | 'denied'
@@ -85,6 +87,43 @@ export default function CameraPage() {
   const [attempt, setAttempt] = useState(0)
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  /* 사진(캡처 Blob 또는 업로드 File)을 백엔드로 보내 식별하고 결과 화면으로 이동. */
+  async function recognize(blob: Blob) {
+    setErr(null)
+    setBusy(true)
+    try {
+      const result = await identifyPill(blob)
+      navigate('/identify', { state: { result, photoUrl: URL.createObjectURL(blob) } })
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : '인식 중 문제가 생겼어요. 다시 시도해 주세요.')
+      setBusy(false)
+    }
+  }
+
+  /* 라이브 비디오의 현재 프레임을 캡처해 JPEG 으로 인식 요청. */
+  function capture() {
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    if (busy || !video || !canvas || !video.videoWidth) return
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    canvas.toBlob((blob) => blob && recognize(blob), 'image/jpeg', 0.9)
+  }
+
+  function onPick(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = '' // 같은 파일 재선택 허용
+    if (file) recognize(file)
+  }
 
   /* 탭에 들어오면 카메라 시작, 떠나면(언마운트) 트랙을 멈춰 카메라를 끈다. attempt를 올리면 재시도.
      연출 모드(stageShot)에선 실제 카메라를 켜지 않는다. */
@@ -195,28 +234,48 @@ export default function CameraPage() {
           )}
 
           {(stageShot || cam === 'live') && <Reticle />}
+          {busy && (
+            <div className={styles.busy} role="status">
+              <div className={styles.spinner} aria-hidden="true" />
+              <span>인식 중…</span>
+            </div>
+          )}
         </div>
 
-        {cam === 'denied' && !stageShot ? (
-          <button type="button" className="btn-primary" onClick={() => setAttempt((a) => a + 1)}>
-            <span className={styles.shutter}>카메라 다시 시도</span>
-          </button>
-        ) : (
+        {stageShot ? (
           <div className={styles.caption}>
-            <span className={styles.captionMain}>
-              {stageShot
-                ? '알약을 인식하고 있어요'
-                : cam === 'live'
-                  ? '가운데 칸에 알약을 맞춰 주세요'
-                  : '카메라를 준비하고 있어요'}
-            </span>
-            <span className={styles.captionSub}>
-              {stageShot
-                ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
-                : cam === 'live'
-                  ? '알약을 비추고 기다리면 자동으로 인식됩니다.'
-                  : '잠시만 기다려 주세요. 곧 켜집니다.'}
-            </span>
+            <span className={styles.captionMain}>알약을 인식하고 있어요</span>
+            <span className={styles.captionSub}>잠시만 기다려 주세요. 곧 알려드릴게요.</span>
+          </div>
+        ) : (
+          <div className={styles.actions}>
+            {err && (
+              <p className={styles.err} role="alert">
+                {err}
+              </p>
+            )}
+            {cam === 'denied' ? (
+              <button type="button" className="btn-primary" onClick={() => setAttempt((a) => a + 1)}>
+                카메라 다시 시도
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={capture}
+                disabled={cam !== 'live' || busy}
+              >
+                {busy ? '인식 중…' : '촬영해서 인식'}
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.pickBtn}
+              onClick={() => fileRef.current?.click()}
+              disabled={busy}
+            >
+              갤러리에서 선택
+            </button>
           </div>
         )}
       </div>
@@ -237,6 +296,10 @@ export default function CameraPage() {
           ))}
         </ul>
       </section>
+
+      {/* 캡처용 캔버스(숨김) + 갤러리 업로드 입력(숨김). 업로드는 데스크톱 테스트에도 유용. */}
+      <canvas ref={canvasRef} hidden />
+      <input ref={fileRef} type="file" accept="image/*" hidden onChange={onPick} />
     </div>
   )
 }

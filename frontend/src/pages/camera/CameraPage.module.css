@@ -180,6 +180,44 @@
   justify-content: center;
   gap: var(--sp-sm);
 }
+.err {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--warn);
+  text-align: center;
+  text-wrap: pretty;
+}
+.pickBtn {
+  align-self: center;
+  background: none;
+  border: none;
+  padding: var(--sp-xs);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--accent-deep);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pickBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 인식 중 — 뷰파인더 위 스크림 + 스피너 */
+.busy {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm);
+  background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
 
 /* ---- 안심 도움말 카드 ---- */
 .tips {
