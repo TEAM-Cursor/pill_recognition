@@ -82,8 +82,6 @@ export default function AllPillsPage({ onBack }: { onBack: () => void }) {
             ))}
           </ul>
         )}
-
-        <p className={styles.note}>임시 데이터예요. 실제 의약품 데이터셋이 준비되면 이곳에 반영돼요.</p>
       </div>
     </div>
   )

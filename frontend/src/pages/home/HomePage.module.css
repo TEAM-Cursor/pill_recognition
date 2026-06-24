@@ -5,9 +5,9 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: var(--sp-lg) var(--sp-md) var(--sp-xl);
-  gap: var(--sp-lg);
-  overflow-y: auto;
+  padding: 15px var(--sp-md) var(--sp-lg);
+  gap: var(--sp-md);
+  overflow: hidden;
 }
 
 /* ---- 인사 헤더 ---- */
@@ -68,8 +68,8 @@
   letter-spacing: 0.02em;
 }
 .spotlightBody {
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
   line-height: var(--lh-snug);
   color: var(--text);
   text-wrap: pretty;

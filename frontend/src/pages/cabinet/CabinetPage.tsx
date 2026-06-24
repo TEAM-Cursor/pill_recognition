@@ -18,12 +18,8 @@ export default function CabinetPage({ onOpen }: { onOpen: (id: number) => void }
 
   return (
     <div className="screen screen--scroll">
-      <h1 className="page-title">알약사전</h1>
-      <p className="page-sub">
-        {isEmpty
-          ? '대화 중 만난 약이 여기에 사전처럼 모여요'
-          : `대화하며 만난 약 ${ENTRIES.length}가지 · 탭하면 자세히 볼 수 있어요`}
-      </p>
+      <h1 className="page-title">알약 사전</h1>
+      <p className="page-sub">그동안 알아본 약들</p>
 
       {isEmpty ? (
         <div className="state">
