@@ -2,13 +2,19 @@
    클로드 시작 화면처럼 비어 있고, 한 줄 물으면 대화가 열린다.
    실제 LLM 연동·세션 저장은 후속 — 지금은 정해진 안내 답으로 흐름만 보여준다. */
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import PillImage from '../../components/PillImage'
 import { ArrowUp, ChevronRight } from '../../components/icons'
 import styles from './ChatPage.module.css'
 
-type Msg = { id: number; role: 'me' | 'bot'; text: string }
+type Msg = { id: number; role: 'me' | 'bot'; text?: string; image?: string }
 
+const DEMO_PHOTO = '/demo/pill.jpg'
+/* 연출용 — 사진 속 약(타이레놀 500mg)에 대한 프로미 답변(성인 기준). */
+const DEMO_ANSWER =
+  '보내주신 약은 타이레놀정 500mg (성분: 아세트아미노펜 500mg)으로 보여요. 발열·두통·생리통·근육통 등에 두루 쓰는 해열진통제예요.\n\n' +
+  '성인은 보통 1회 1~2정(500~1,000mg)을 4~6시간 간격으로, 필요할 때 복용해요. 하루 최대 4,000mg(8정)을 넘기지 마세요.\n\n' +
+  '음주 후에는 복용을 피하고, 종합감기약 등 다른 아세트아미노펜 함유 약과 겹쳐 먹지 않도록 성분을 확인하세요. 간 질환이 있다면 복용 전 의사·약사와 상담하는 게 좋아요.'
 const EXAMPLES = ['두통에 먹을 약 알려줘', '빈속에 먹어도 될까?', '졸음이 오는 약이야?']
 const BOT_REPLY = '네, 확인해 드릴게요. 약 이름이나 증상을 조금 더 알려주시면 더 정확하게 안내해 드릴게요.'
 
@@ -20,14 +26,34 @@ const RECENT_SESSIONS: RecentSession[] = [
   { id: 3, title: '감기약 같이 먹기', preview: '진통제랑 같이 먹어도 되나요?', when: '6/11' },
 ]
 
-/* 약속 도우미 아바타 — 브랜드 알약을 작은 민트 원 안에 */
+/* 프로미 아바타 — 브랜드 알약을 작은 민트 원 안에 */
 const ASSISTANT_LOOK = { kind: 'capsule', color: 'var(--accent)', color2: 'var(--bg-elev)' } as const
 
 export default function ChatPage() {
   const navigate = useNavigate()
-  const [msgs, setMsgs] = useState<Msg[]>([])
+  /* 캡처용 스테이징 — 프로미가 응답을 준비하는 타이핑 인디케이터가 고정으로 떠 있다.
+       /chat?stage=typing : 증상 텍스트를 보낸 직후 (응답 준비중)
+       /chat?stage=photo  : 알약 사진을 첨부해 보낸 직후 (응답 준비중)
+       /chat?stage=answer : 사진 첨부 → 프로미가 답변까지 완료 */
+  const location = useLocation()
+  const stage = new URLSearchParams(location.search).get('stage')
+  const stageTyping = stage === 'typing'
+  const stagePhoto = stage === 'photo'
+  const stageAnswer = stage === 'answer'
+  const [msgs, setMsgs] = useState<Msg[]>(
+    stageAnswer
+      ? [
+          { id: 1, role: 'me', image: DEMO_PHOTO },
+          { id: 2, role: 'bot', text: DEMO_ANSWER },
+        ]
+      : stagePhoto
+        ? [{ id: 1, role: 'me', image: DEMO_PHOTO }]
+        : stageTyping
+          ? [{ id: 1, role: 'me', text: '어제부터 머리가 지끈거리고 콧물이 나요.' }]
+          : [],
+  )
   const [draft, setDraft] = useState('')
-  const [typing, setTyping] = useState(false)
+  const [typing, setTyping] = useState(stageTyping || stagePhoto)
   const bottomRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   /* 사용자가 위로 스크롤 중이면 자동 하단 스크롤을 억제하기 위한 추적 */
@@ -64,10 +90,14 @@ export default function ChatPage() {
     <div className="result">
       <header className={styles.head}>
         <h1 className={styles.headTitle}>대화</h1>
-        <p className={styles.headSub}>약속 도우미</p>
+        <p className={styles.headSub}>채팅으로 알아보기</p>
       </header>
 
-      <div className={`result-scroll ${styles.scroll}`} ref={scrollRef} onScroll={onScroll}>
+      <div
+        className={`result-scroll ${styles.scroll}${empty ? ` ${styles.noScroll}` : ''}`}
+        ref={scrollRef}
+        onScroll={onScroll}
+      >
         {empty ? (
           <div className={styles.empty}>
             <div className={styles.intro}>
@@ -122,19 +152,23 @@ export default function ChatPage() {
                   key={m.id}
                   className={`${styles.row}${me ? ` ${styles.rowMe}` : ''}`}
                   role="article"
-                  aria-label={me ? '내 메시지' : '약속 도우미의 메시지'}
+                  aria-label={me ? '내 메시지' : '프로미의 메시지'}
                 >
                   {!me && (
                     <span className={styles.avatar} aria-hidden="true">
                       <PillImage look={ASSISTANT_LOOK} size={20} />
                     </span>
                   )}
-                  <div className={`${styles.bubble} ${me ? styles.bubbleMe : styles.bubbleBot}`}>{m.text}</div>
+                  {m.image ? (
+                    <img className={styles.photo} src={m.image} alt="첨부한 알약 사진" />
+                  ) : (
+                    <div className={`${styles.bubble} ${me ? styles.bubbleMe : styles.bubbleBot}`}>{m.text}</div>
+                  )}
                 </div>
               )
             })}
             {typing && (
-              <div className={styles.row} role="status" aria-label="약속 도우미가 입력 중입니다">
+              <div className={styles.row} role="status" aria-label="프로미가 입력 중입니다">
                 <span className={styles.avatar} aria-hidden="true">
                   <PillImage look={ASSISTANT_LOOK} size={20} />
                 </span>
@@ -159,7 +193,7 @@ export default function ChatPage() {
       >
         <input
           className="input"
-          placeholder="약속 도우미에게 물어보기"
+          placeholder="프로미에게 물어보기"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           aria-label="메시지 입력"

@@ -47,8 +47,8 @@ export default function HomePage() {
   return (
     <div className={styles.home}>
       <header className={styles.greeting}>
+        <h1 className={styles.greetingTitle}>홈</h1>
         <p className={styles.date}>{todayLabel()}</p>
-        <h1 className={styles.greetingTitle}>오늘도 안녕하세요</h1>
       </header>
 
       {/* 시그니처 — 오늘의 한마디 (LLM 한 줄) */}

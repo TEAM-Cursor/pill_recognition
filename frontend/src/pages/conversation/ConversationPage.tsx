@@ -41,11 +41,6 @@ export default function ConversationPage({ onBack }: { onBack: () => void }) {
       </div>
 
       <div className={`result-scroll ${styles.scroll}`}>
-        <p className={styles.intro}>
-          <span className={styles.introDot} aria-hidden="true" />
-          편하게 물어보세요. 안심되도록 도와드릴게요.
-        </p>
-
         <div className={styles.list}>
           {msgs.map((m) => {
             const me = m.role === 'me'
@@ -54,9 +49,9 @@ export default function ConversationPage({ onBack }: { onBack: () => void }) {
                 key={m.id}
                 className={`${styles.row}${me ? ` ${styles.rowMe}` : ''}`}
                 role="article"
-                aria-label={me ? '내 메시지' : '약속 도우미의 메시지'}
+                aria-label={me ? '내 메시지' : '프로미의 메시지'}
               >
-                <span className={styles.who}>{me ? '나' : '약속 도우미'}</span>
+                <span className={styles.who}>{me ? '나' : '프로미'}</span>
                 <div className={`${styles.bubble} ${me ? styles.bubbleMe : styles.bubbleBot}`}>
                   {m.text}
                 </div>

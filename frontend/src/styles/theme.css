@@ -89,7 +89,7 @@
   * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
   .is-scrolling { scrollbar-color: var(--scrollbar-thumb) transparent; }
 }
-*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar { width: 6.6px; height: 6.6px; }
 *::-webkit-scrollbar-button { display: none; width: 0; height: 0; }   /* PC 증감 화살표 버튼 제거 */
 *::-webkit-scrollbar-corner { background: transparent; }
 *::-webkit-scrollbar-track { background: transparent; }
@@ -102,6 +102,8 @@
 
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; height: 100%; }
+/* 더블탭 줌 차단(클릭·스크롤은 유지). 핀치 줌은 viewport 메타 + lockZoom()이 막는다. */
+html { touch-action: manipulation; }
 
 body {
   background: #dde4e5;
@@ -138,7 +140,7 @@ h1, h2 { font-family: var(--font-display); }
   overflow: hidden;
 }
 .screen { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-.screen--scroll { padding: var(--sp-lg) var(--sp-md) var(--sp-xl); overflow-y: auto; }
+.screen--scroll { padding: 15px var(--sp-md) var(--sp-xl); overflow-y: auto; }
 
 /* 데스크톱(넓은 화면)에선 창 높이만큼 늘어나지 않게, 실제 폰 크기 프레임으로 캡 + 중앙 배치 */
 @media (min-width: 480px) {
@@ -155,9 +157,9 @@ h1, h2 { font-family: var(--font-display); }
 .page-title {
   font-size: var(--fs-h1); font-weight: var(--fw-bold);
   letter-spacing: -0.02em; line-height: var(--lh-tight);
-  margin: var(--sp-xs) 0; text-wrap: balance;
+  margin: 0 0 var(--sp-xs); text-wrap: balance;
 }
-.page-sub { font-size: var(--fs-cap); color: var(--text-dim); margin: 0 0 var(--sp-lg); text-wrap: pretty; }
+.page-sub { font-size: var(--fs-cap); color: var(--text-dim); margin: 0 0 var(--sp-md); text-wrap: pretty; }
 .page-foot { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); margin-top: var(--sp-md); }
 
 /* ---- 폼 프리미티브 ---- */

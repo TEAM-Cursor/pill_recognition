@@ -5,9 +5,9 @@
   min-height: 0;            /* flex 자식이 줄어들어 overflow 스크롤이 동작하도록 */
   display: flex;
   flex-direction: column;
-  padding: var(--sp-lg) var(--sp-md) var(--sp-xl);
-  gap: var(--sp-lg);
-  overflow-y: auto;
+  padding: 15px var(--sp-md) var(--sp-lg);
+  gap: var(--sp-md);
+  overflow: hidden;
 }
 
 /* ---- 인사 헤더 ---- */
@@ -39,15 +39,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-lg);
+  gap: var(--sp-md);
   min-height: 0;
 }
 
 .viewfinder {
   position: relative;
-  width: clamp(200px, 85vw, 264px);
-  height: clamp(200px, 85vw, 264px);
-  border-radius: var(--radius-lg);
+  /* 좌우 화면 끝까지 — .home 패딩(sp-md)을 음수 마진으로 상쇄하고 2px씩 더 흘려보낸다.
+     (100%+32px와 16px×2의 서브픽셀 반올림으로 생기는 실틈 방지 · 초과분은 .home overflow:hidden이 잘라냄) */
+  width: calc(100% + 2 * var(--sp-md) + 4px);
+  margin-inline: calc(-1 * var(--sp-md) - 2px);
+  flex: 1;
+  min-height: 0;
+  border-radius: 0;
   background:
     radial-gradient(120% 120% at 50% 28%, var(--accent-fog), transparent 62%),
     var(--bg-elev);
@@ -72,38 +76,37 @@
 .cornerBL { bottom: var(--sp-md); left: var(--sp-md); border-right: none; border-top: none; }
 .cornerBR { bottom: var(--sp-md); right: var(--sp-md); border-left: none; border-top: none; }
 
-/* 알약 가이드 실루엣 — 은은하게 */
-.silhouette {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.5;
-  animation: breathe 3.6s var(--ease-out) infinite;
-}
-@keyframes breathe {
-  0%, 100% { opacity: 0.34; transform: scale(0.98); }
-  50% { opacity: 0.58; transform: scale(1); }
+/* 라이브 카메라 미리보기 — 1:1 뷰파인더를 꽉 채우도록 cover.
+   확대(화각 좁히기)는 하이브리드: 네이티브 zoom 지원 기기는 트랙 제약으로(선명),
+   미지원(iOS 등)은 인라인 transform: scale로 폴백(흐림). 배율은 컴포넌트에서 주입. */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
 }
 
-/* 인식 중 스캔 라인 */
-.scanline {
+/* 중앙 조준선 — 영상 위에 은은하게(반투명) 얹는다. 클릭 막지 않도록 pointer-events 없음. */
+.reticle {
   position: absolute;
-  left: var(--sp-lg);
-  right: var(--sp-lg);
-  height: 2px;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  box-shadow: 0 0 12px var(--accent-line);
-  animation: sweep 1.8s var(--ease-out) infinite;
-}
-@keyframes sweep {
-  0% { transform: translateY(-94px); opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { transform: translateY(94px); opacity: 0; }
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  height: 192px;
+  transform: translate(-50%, -50%);
+  color: var(--accent);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 2;
+  /* brightness로 민트를 한 톤 밝게 + 밝은 배경 대비용 옅은 그림자 */
+  filter: brightness(1.35) drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
 }
 
 .spinner {
+  position: relative;
+  z-index: 1;
   width: 34px;
   height: 34px;
   border: 3px solid var(--accent-soft);
@@ -150,16 +153,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-xs);
+  gap: 2px;   /* 두 줄 줄간격 살짝 축소(sp-xs 4px → 2px) */
   text-align: center;
 }
 .captionMain {
-  font-size: var(--fs-body);
+  font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   color: var(--text);
 }
 .captionSub {
-  font-size: var(--fs-cap);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
   line-height: var(--lh-snug);
   text-wrap: pretty;
@@ -182,8 +185,8 @@
 .tips {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-md);
-  padding: var(--sp-lg);
+  gap: var(--sp-sm);
+  padding: var(--sp-md);
 }
 .tipsHead {
   display: flex;
@@ -198,7 +201,7 @@
 .tipList {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-sm);
+  gap: var(--sp-xs);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -218,41 +221,3 @@
   margin-top: 1px;
 }
 
-/* ---- 데모 상태 토글 (프로토타입 전용) ---- */
-.demoBar {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  flex-wrap: wrap;
-}
-.demoLabel {
-  font-size: var(--fs-xs);
-  color: var(--text-faint);
-  font-weight: var(--fw-medium);
-}
-.demoToggle {
-  display: flex;
-  gap: var(--sp-xs);
-  background: var(--bg-elev);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: var(--sp-xs);
-}
-.demoBtn {
-  padding: var(--sp-xs) var(--sp-sm);
-  min-height: 44px;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--text-dim);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
-}
-.demoBtnOn {
-  background: var(--bg-elev-2);
-  color: var(--text);
-  border-color: var(--border-strong);
-  font-weight: var(--fw-bold);
-}

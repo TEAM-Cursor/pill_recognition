@@ -3,13 +3,19 @@
 /* ---- 헤더 ---- */
 .head {
   flex-shrink: 0;
-  padding: var(--sp-xl) var(--sp-md) var(--sp-md);
-  border-bottom: 1px solid var(--border);
+  padding: 15px var(--sp-md) var(--sp-sm);
+}
+
+/* 빈 상태(대화 시작 전)는 한 화면에 담기게 — 스크롤 없음. 메시지가 쌓이면 .scroll만 남아 스크롤된다.
+   .result-scroll(전역, overflow-y:auto)와 특이도 동률이라 두 모듈 클래스로 묶어 우선순위를 올린다. */
+.scroll.noScroll {
+  overflow: hidden;
 }
 .headTitle {
   font-size: var(--fs-h1);
   font-weight: var(--fw-bold);
   letter-spacing: -0.02em;
+  line-height: var(--lh-tight);
   margin: 0;
 }
 .headSub {
@@ -28,20 +34,20 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-xl);
-  padding: var(--sp-xl) var(--sp-sm) var(--sp-lg);
+  gap: var(--sp-md);
+  padding: var(--sp-md) var(--sp-sm);
 }
 .intro {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-lg);
+  gap: var(--sp-md);
   text-align: center;
-  padding: var(--sp-md) 0 var(--sp-sm);
+  padding: 0 0 var(--sp-sm);
 }
 .emptyAvatar {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-pill);
   background: var(--accent-soft);
   display: flex;
@@ -184,6 +190,14 @@
   align-items: center;
   justify-content: center;
 }
+/* 첨부 사진 메시지 — 말풍선 대신 둥근 사진 */
+.photo {
+  max-width: 62%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: block;
+}
+
 .bubble {
   max-width: 78%;
   padding: var(--sp-sm) var(--sp-md);
