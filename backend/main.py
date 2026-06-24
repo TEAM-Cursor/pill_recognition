@@ -26,6 +26,9 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# 도메인 라우터 등록 위치 (구현되면 주석 해제):
-# from apps.pill.adapter.inbound.api.v1 import router as pill_router
-# app.include_router(pill_router, prefix="/api")
+# 도메인 라우터 등록 (각 라우터가 자기 prefix 를 들고 있다).
+from apps.guidance.adapter.inbound.api.v1 import router as guidance_router  # noqa: E402
+from apps.pill.adapter.inbound.api.v1 import router as pill_router  # noqa: E402
+
+app.include_router(guidance_router)  # prefix=/api/guidance (라우터 내부)
+app.include_router(pill_router, prefix="/api")  # → /api/pill/...
