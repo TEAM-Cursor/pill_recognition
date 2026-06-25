@@ -8,7 +8,9 @@ from apps.guidance.app.dtos import AskRequestDto, HealthInfoDto
 from apps.guidance.app.use_cases import AskGuidanceUseCase
 
 
-def _make_use_case(reply: str = "복용 가능합니다.") -> tuple[AskGuidanceUseCase, FakeConversationRepository]:
+def _make_use_case(
+    reply: str = "복용 가능합니다.",
+) -> tuple[AskGuidanceUseCase, FakeConversationRepository]:
     repo = FakeConversationRepository()
     llm = FakeLLMAdapter(reply=reply)
     return AskGuidanceUseCase(llm=llm, repo=repo), repo
@@ -53,7 +55,9 @@ def test_health_info_is_accepted() -> None:
         is_pregnant=True,
         current_medications=["철분제"],
     )
-    result = use_case.execute(conv.id, AskRequestDto(message="이 약 먹어도 되나요?", health_info=health))
+    result = use_case.execute(
+        conv.id, AskRequestDto(message="이 약 먹어도 되나요?", health_info=health)
+    )
 
     assert result.content == "주의가 필요합니다."
 

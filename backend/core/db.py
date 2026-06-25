@@ -18,7 +18,7 @@ from core.config import get_settings
 engine = create_engine(
     get_settings().database_url,
     pool_pre_ping=True,
-    connect_args={"connect_timeout": 5},
+    connect_args={"connect_timeout": 15},  # Neon 서버리스 콜드스타트(유휴 후 ~5-10s) 여유
 )
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 

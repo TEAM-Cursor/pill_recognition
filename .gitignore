@@ -34,3 +34,7 @@ Thumbs.db
 
 # ===== Test artifacts =====
 .playwright-mcp/
+
+# ===== 생성 데이터 (재생성 가능, 커밋 제외) =====
+# 공공데이터 적재 산출물 — backend/scripts/fetch_pills.py 로 재생성. DB가 정본, 프론트 미사용.
+frontend/public/data/pills.json

@@ -201,15 +201,24 @@ class PillRepository(PillRepositoryPort):
             }
             for o in orms
         ]
-        stmt = (
-            pg_insert(PillORM)
-            .values(rows)
-            .on_conflict_do_update(
-                index_elements=["item_seq"],
-                set_={
-                    col: pg_insert(PillORM).excluded[col] for col in rows[0] if col != "item_seq"
-                },
+        # 같은 item_seq 가 한 statement 안에 중복되면 ON CONFLICT 가 실패하므로 마지막 값만 남긴다.
+        rows = list({r["item_seq"]: r for r in rows}.values())
+        # psycopg 파라미터 한계(65535). 행당 컬럼 수가 있어 전량을 한 번에 보내면 초과하므로
+        # 청크로 나눠 INSERT 한다 (1000행 × ~22컬럼 ≈ 22,000 파라미터).
+        chunk_size = 1000
+        for start in range(0, len(rows), chunk_size):
+            batch = rows[start : start + chunk_size]
+            stmt = (
+                pg_insert(PillORM)
+                .values(batch)
+                .on_conflict_do_update(
+                    index_elements=["item_seq"],
+                    set_={
+                        col: pg_insert(PillORM).excluded[col]
+                        for col in batch[0]
+                        if col != "item_seq"
+                    },
+                )
             )
-        )
-        self._db.execute(stmt)
+            self._db.execute(stmt)
         self._db.commit()
