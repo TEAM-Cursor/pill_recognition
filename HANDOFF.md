@@ -1,7 +1,7 @@
 ---
 status: 개발
 updated: 2026-06-25
-summary: **알약 인식·복약 상담 통합 완료 → 4인 분담 시작 단계 (2026-06-24 핸드오프, origin/main 기준).** `POST /api/pill/identify`(필드 `file`) Gemini Vision→P2 매칭, guidance 상담 엔드포인트까지 `main.py` 라우터 배선 완료, 기동 시 DB 테이블 자동생성(lifespan `create_all`, Alembic 전 임시), 프론트 카메라 촬영→인식 실연동 + 식별 결과 화면(`/identify`) 동작. 검증 그린(backend ruff·format·mypy·lint-imports·pytest17 / frontend tsc·build·eslint / 라이브 health·415·CORS). **다음 = 팀장 §4(키 발급·배포·조율) + 팀원 1~4 분담**(§5: 알약사전 종단 / 인식 품질·결과흐름 / 상담 연동·백엔드 견고화 / 환경셋업·문서). 선행: 공공데이터·Gemini 키 발급 후 적재(`scripts/fetch_pills.py`). Vision 토글은 코드가 아니라 키(`GOOGLE_API_KEY`). 색 표기는 식약처 raw("하양" O / "흰색" X).
+summary: **팀원1 알약사전 종단 완료(2026-06-25, feat/pill-dictionary).** GET /api/pill/dictionary(목록·검색) + GET /api/pill/dictionary/{item_seq}(상세) 신설, SearchPillsPort(ABC)·SearchPillsUseCase 완성, 프론트 AllPillsPage API실연동·PillDetailPage 신설·App.tsx 라우트 추가(/dictionary/:itemSeq). 검증 그린(backend ruff·mypy·lint-imports·pytest21 / frontend tsc·lint·build). **대기 중: 팀원1 PR 머지(팀장) + 팀원4 실데이터 적재(키 선행)**. 팀원 2(인식 품질) · 3(상담 연동·Alembic) 진행 중.
 repo: Team-Seuk/Yaksok
 ---
 
@@ -114,13 +114,18 @@ core/        # db·gemini·config 공용 (features를 import 하지 않음)
 
 > 팀원 1~3은 기능을 백~프론트 종단으로 맡고, **팀원 4는 서류·환경 담당이라 코딩 부담이 적은 가벼운 작업을 몰았다.** 각 작업 끝의 **선행**은 의존 작업.
 
-### 팀원 1 — 알약사전(검색·목록·상세) 종단
+### 팀원 1 — 알약사전(검색·목록·상세) 종단 ✅ 완료 (2026-06-25)
 
-1. **조회 API 신설(백엔드)** — `app/use_cases/search_pills.py`(목록·상세·검색)는 **있는데 엔드포인트가 없다.** `identify.py` 라우터 패턴대로 `adapter/inbound/api/v1/`에 라우터+스키마 추가, main.py 등록.
-2. **프론트 연동** — `AllPillsPage`·`ResultPage`가 더미 `lib/pillData.ts`로 동작 → 위 API 호출로 교체.
+> **브랜치 `feat/pill-dictionary` 푸시 완료 — 팀장 PR 머지 필요.**
 
-- 파일: `apps/pill/app/use_cases/search_pills.py`, `apps/pill/adapter/inbound/api/v1/`, `frontend/src/pages/allpills/*`·`pages/result/ResultPage.tsx`·`lib/pillData.ts`
-- 선행: 실데이터 확인은 팀원4 적재 후.
+**완료한 것:**
+
+1. **조회 API 신설(백엔드)** — `SearchPillsPort`(ABC) + `SearchPillsUseCase` 상속, `GET /api/pill/dictionary`(목록·검색) + `GET /api/pill/dictionary/{item_seq}`(상세) 신설. v1/__init__.py에 통합(main.py 무수정). pytest 4건 추가(FakeRepo+dependency_overrides).
+2. **프론트 연동** — `AllPillsPage`: 더미 → API 실연동 + 250ms 디바운스 + 로딩·에러·빈 상태. `PillDetailPage` 신설(`/dictionary/:itemSeq`). `App.tsx` 라우트 추가. cabinet `/pill/:id` 무수정.
+
+검증: ruff ✅ · mypy ✅ · lint-imports 5 KEPT ✅ · pytest 21 ✅ / typecheck ✅ · lint ✅ · build ✅
+
+**실데이터 부재**: 팀원4 적재 전까지 목록이 비어 보이는 것은 정상. 로직은 fake 기반 테스트로 검증 완료.
 
 ### 팀원 2 — 알약 인식 품질·결과 흐름
 
@@ -189,7 +194,9 @@ npm run build && npm run lint
 | `backend/apps/pill/`                                 | 인식(`identify`)·매칭·사전(`search_pills`)   |
 | `backend/apps/guidance/`                             | 복약 상담(LLM)                               |
 | `backend/scripts/fetch_pills.py`                     | 공공데이터 적재                              |
-| `frontend/src/lib/api.ts`                            | 백엔드 API 클라이언트(`identifyPill` + 타입) |
-| `frontend/src/pages/camera/CameraPage.tsx`           | 카메라·캡처·업로드                           |
-| `frontend/src/pages/identify/IdentifyResultPage.tsx` | 식별 결과                                    |
-| `frontend/src/lib/pillData.ts`                       | 알약 더미 데이터(→ API로 교체 예정)          |
+| `frontend/src/lib/api.ts`                            | 백엔드 API 클라이언트(`identifyPill`·`listPills`·`getPillDetail` + 타입) |
+| `frontend/src/pages/camera/CameraPage.tsx`           | 카메라·캡처·업로드                                                        |
+| `frontend/src/pages/identify/IdentifyResultPage.tsx` | 식별 결과                                                                  |
+| `frontend/src/pages/allpills/AllPillsPage.tsx`       | 전체 알약 사전 목록·검색 (API 실연동 완료)                                |
+| `frontend/src/pages/dictionary/PillDetailPage.tsx`   | 알약 상세 `/dictionary/:itemSeq` (신규)                                   |
+| `backend/apps/pill/adapter/inbound/api/v1/dictionary.py` | 사전 라우터(목록·상세)                                                |
