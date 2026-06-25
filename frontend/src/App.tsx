@@ -88,6 +88,7 @@ function PillDetailRoute() {
   )
 }
 
+
 function ResultRoute() {
   const navigate = useNavigate()
   const { id } = useParams()

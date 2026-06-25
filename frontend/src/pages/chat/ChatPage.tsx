@@ -3,11 +3,26 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PillImage from '../../components/PillImage'
 import { ArrowUp } from '../../components/icons'
+import type { IdentifyResponse } from '../../lib/api'
 import styles from './ChatPage.module.css'
 import { createConversation, sendMessage, ApiError, type HealthInfoPayload } from '../../lib/api'
 import { loadHealth } from '../../lib/storage'
 
 type Msg = { id: number; role: 'me' | 'bot'; text?: string; image?: string }
+
+/* 카메라 스캔으로 넘어올 때 전달되는 인식 결과 (CameraPage → navigate state). */
+type ScanHandoff = { image: string; result: IdentifyResponse }
+
+/* 인식 직후 임시 안내 — 실제 상담 답변(LLM)은 팀원3의 guidance 연동으로 대체된다. */
+function scanIntro(result: IdentifyResponse): string {
+  const top = result.candidates[0]?.item_name
+  if (top) return `사진 속 약은 ${top}로 보여요. 복용법이나 주의사항 등 궁금한 점을 물어보세요.`
+  const a = result.attributes
+  const seen = [a.shape, a.color_front].filter(Boolean).join(' · ')
+  return seen
+    ? `${seen} 형태의 알약으로 보여요. 약 이름이나 증상을 알려주시면 더 자세히 도와드릴게요.`
+    : '알약을 살펴봤어요. 궁금한 점을 편하게 물어보세요.'
+}
 
 const DEMO_PHOTO = '/demo/pill.jpg'
 const EXAMPLES = ['두통에 먹을 약 알려줘', '빈속에 먹어도 될까?', '졸음이 오는 약이야?']
@@ -32,16 +47,19 @@ export default function ChatPage() {
   const stage = new URLSearchParams(location.search).get('stage')
   const stageTyping = stage === 'typing'
   const stagePhoto = stage === 'photo'
-
+  /* 카메라 스캔으로 진입한 경우 — 캡처 사진을 첫 메시지로 띄우고 안내를 잇는다. */
+  const scan = (location.state as { scan?: ScanHandoff } | null)?.scan
   const [msgs, setMsgs] = useState<Msg[]>(
-    stagePhoto
-      ? [{ id: 1, role: 'me', image: DEMO_PHOTO }]
-      : stageTyping
-        ? [{ id: 1, role: 'me', text: '어제부터 머리가 지끈거리고 콧물이 나요.' }]
-        : [],
+    scan
+      ? [{ id: 1, role: 'me', image: scan.image }]
+      : stagePhoto
+        ? [{ id: 1, role: 'me', image: DEMO_PHOTO }]
+        : stageTyping
+          ? [{ id: 1, role: 'me', text: '어제부터 머리가 지끈거리고 콧물이 나요.' }]
+          : [],
   )
   const [draft, setDraft] = useState('')
-  const [typing, setTyping] = useState(stageTyping || stagePhoto)
+  const [typing, setTyping] = useState(stageTyping || stagePhoto || !!scan)
   const [conversationId, setConversationId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -54,6 +72,17 @@ export default function ChatPage() {
   useEffect(() => {
     if (stickToBottom.current) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [msgs, typing])
+
+  /* 카메라 스캔으로 진입했으면 사진 메시지 뒤에 안내 답변을 한 번 잇는다(마운트 1회). */
+  useEffect(() => {
+    if (!scan) return
+    const t = setTimeout(() => {
+      setTyping(false)
+      setMsgs((m) => [...m, { id: m.length + 1, role: 'bot', text: scanIntro(scan.result) }])
+    }, 800)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function onScroll() {
     const el = scrollRef.current
