@@ -29,7 +29,8 @@ OUT_PATH = BACKEND_DIR.parent / "frontend" / "public" / "data" / "pills.json"
 
 API_URL = os.environ.get(
     "MDCIN_API_URL",
-    "http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService01/getMdcinGrnIdntfcInfoList01",
+    # 2026-06: 구 Service01 이 500으로 폐기됨 → 현행 v03 으로 교체(서비스·메서드 둘 다 03).
+    "http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService03/getMdcinGrnIdntfcInfoList03",
 )
 NUM_OF_ROWS = 100
 
