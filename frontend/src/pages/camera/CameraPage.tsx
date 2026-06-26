@@ -256,46 +256,30 @@ export default function CameraPage() {
           )}
         </div>
 
-        {cam === 'denied' && !stageShot ? (
-          <button type="button" className="btn-primary" onClick={() => setAttempt((a) => a + 1)}>
-            <span className={styles.shutter}>카메라 다시 시도</span>
-          </button>
-        ) : (
-          <div className={styles.actions}>
-            <div className={styles.caption}>
-              <span className={styles.captionMain}>
-                {stageShot
-                  ? '알약을 인식하고 있어요'
-                  : cam === 'live'
-                    ? scanning
-                      ? '알약을 살펴보고 있어요'
-                      : notFound
-                        ? '약을 찾지 못했어요'
-                        : '가운데 칸에 알약을 맞춰 주세요'
-                    : '카메라를 준비하고 있어요'}
-              </span>
-              <span className={styles.captionSub}>
-                {stageShot
-                  ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
-                  : cam === 'live'
-                    ? scanning
-                      ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
-                      : notFound
-                        ? '조금 더 가까이서 다시 촬영해 주세요.'
-                        : '준비되면 아래 버튼을 눌러 촬영해요.'
-                    : '잠시만 기다려 주세요. 곧 켜집니다.'}
-              </span>
-            </div>
-            {!stageShot && cam === 'live' && (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={handleShutter}
-                disabled={scanning}
-              >
-                <span className={styles.shutter}>{scanning ? '인식 중…' : '촬영'}</span>
-              </button>
-            )}
+        {cam !== 'denied' && (
+          <div className={styles.caption}>
+            <span className={styles.captionMain}>
+              {stageShot
+                ? '알약을 인식하고 있어요'
+                : cam === 'live'
+                  ? scanning
+                    ? '알약을 살펴보고 있어요'
+                    : notFound
+                      ? '약을 찾지 못했어요'
+                      : '가운데 칸에 알약을 맞춰 주세요'
+                  : '카메라를 준비하고 있어요'}
+            </span>
+            <span className={styles.captionSub}>
+              {stageShot
+                ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
+                : cam === 'live'
+                  ? scanning
+                    ? '잠시만 기다려 주세요. 곧 알려드릴게요.'
+                    : notFound
+                      ? '조금 더 가까이서 다시 촬영해 주세요.'
+                      : '아래 셔터 버튼을 눌러 촬영해요.'
+                  : '잠시만 기다려 주세요. 곧 켜집니다.'}
+            </span>
           </div>
         )}
       </div>
@@ -316,6 +300,35 @@ export default function CameraPage() {
           ))}
         </ul>
       </section>
+
+      {!stageShot && (
+        <div className={styles.controlBar}>
+          {cam === 'denied' ? (
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => setAttempt((a) => a + 1)}
+            >
+              카메라 다시 시도
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.shutterBtn}
+              onClick={handleShutter}
+              disabled={cam !== 'live' || scanning}
+              aria-label="사진 촬영"
+              aria-busy={scanning}
+            >
+              {scanning ? (
+                <span className={styles.shutterSpin} aria-hidden="true" />
+              ) : (
+                <span className={styles.shutterCore} aria-hidden="true" />
+              )}
+            </button>
+          )}
+        </div>
+      )}
     </div>
   )
 }
