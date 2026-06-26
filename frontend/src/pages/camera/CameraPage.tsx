@@ -40,24 +40,6 @@ function LockIcon({ size = 26 }: { size?: number }) {
   )
 }
 
-function CheckIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  )
-}
-
 /* 중앙 조준선 — 사각 코너 브래킷 + 십자. */
 function Reticle() {
   return (
@@ -79,12 +61,6 @@ function Reticle() {
     </svg>
   )
 }
-
-const TIPS = [
-  '밝은 곳에서 알약 한 알을 평평하게 놓아 주세요.',
-  '글자나 분할선이 보이면 더 정확하게 알려드려요.',
-  '사진은 인식에만 쓰고 따로 저장하지 않아요.',
-]
 
 export default function CameraPage() {
   const location = useLocation()
@@ -270,23 +246,6 @@ export default function CameraPage() {
           </p>
         )}
       </div>
-
-      <section className={`card ${styles.tips}`} aria-labelledby="camera-tips">
-        <div className={styles.tipsHead}>
-          <span className="badge">촬영 팁</span>
-          <span id="camera-tips" className={styles.tipsTitle}>더 정확하게 인식하려면</span>
-        </div>
-        <ul className={styles.tipList}>
-          {TIPS.map((tip) => (
-            <li key={tip} className={styles.tipItem}>
-              <span className={styles.tipMark} aria-hidden="true">
-                <CheckIcon />
-              </span>
-              {tip}
-            </li>
-          ))}
-        </ul>
-      </section>
 
       {!stageShot && (
         <div className={styles.controlBar}>
