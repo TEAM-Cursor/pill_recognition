@@ -1,9 +1,9 @@
-"""의약품개요정보(e약은요, 공공데이터포털 오픈API) 수집 → pills 테이블에 효능·용법·주의 보강.
+"""의약품개요정보(e약은요, 공공데이터포털 오픈API) 수집 → pills 테이블 효능·용법·주의 보강 + 신규 적재.
 
 낱알식별(fetch_pills.py)은 모양·색·각인만 채운다. 이 스크립트는 e약은요에서
-효능(efcy)·용법(use_method)·주의(caution)를 받아 **item_seq 가 일치하는 기존 행만
-부분 업데이트**한다(모양·이미지 등 다른 컬럼은 건드리지 않음). e약은요에만 있고
-낱알식별에 없는 품목(액제 등)은 매칭 0행이라 무시된다.
+효능(efcy)·용법(use_method)·주의(caution)를 받아:
+  - item_seq 가 **일치하는 기존 행**은 효능·용법·주의만 부분 업데이트(다른 컬럼 불변)
+  - e약은요에만 있는 **신규 품목(액제 등)**은 사전 검색용으로 신규 삽입(물리속성 없이 이름·효능·이미지 등)
 
 준비: backend/.env 에 DATA_GO_KR_KEY (낱알식별과 동일 키 사용 가능).
 
@@ -88,6 +88,9 @@ def collect(body: dict[str, Any], out: list[dict[str, Any]]) -> None:
         out.append(
             {
                 "item_seq": seq,
+                "item_name": _clean(it.get("itemName")),
+                "entp_name": _clean(it.get("entpName")),
+                "image_url": _clean(it.get("itemImage")),
                 "efcy": _clean(it.get("efcyQesitm")),
                 "use_method": _clean(it.get("useMethodQesitm")),
                 "caution": _build_caution(it),
@@ -96,12 +99,18 @@ def collect(body: dict[str, Any], out: list[dict[str, Any]]) -> None:
 
 
 def update_db(rows: list[dict[str, Any]]) -> None:
-    """item_seq 가 일치하는 기존 pills 행의 efcy/use_method/caution 만 갱신(부분 업데이트).
+    """매칭(기존 pills) 행은 efcy/use_method/caution 만 부분 갱신, 미매칭(e약은요 전용)
+    품목은 사전 검색용으로 신규 삽입한다.
 
-    e약은요에만 있고 pills(낱알식별)에 없는 품목은 먼저 걸러낸다 — ORM 벌크 UPDATE 는
-    행마다 정확히 1행 매칭을 기대해, 없는 item_seq 가 섞이면 StaleDataError 가 난다.
+    - 매칭 UPDATE: ORM 벌크 UPDATE 는 행마다 1행 매칭을 기대 → 없는 item_seq 가 섞이면
+      StaleDataError. 그래서 기존 item_seq 로 먼저 가른다(낱알식별 컬럼은 안 건드림).
+    - 미매칭 INSERT: 모양·색·각인 없는 행(이름·효능·용법·주의·이미지만). 충돌 시 무시.
     """
+    # 같은 item_seq 중복 제거(마지막 값 유지).
+    rows = list({r["item_seq"]: r for r in rows}.values())
+
     from sqlalchemy import select, update
+    from sqlalchemy.dialects.postgresql import insert as pg_insert
 
     from apps.pill.adapter.outbound.orm.pill_orm import PillORM
     from core.db import SessionLocal
@@ -109,13 +118,48 @@ def update_db(rows: list[dict[str, Any]]) -> None:
     with SessionLocal() as db:
         existing = set(db.execute(select(PillORM.item_seq)).scalars())
         matched = [r for r in rows if r["item_seq"] in existing]
-        before = _count_filled(db)
+        missing = [r for r in rows if r["item_seq"] not in existing]
+        before_efcy, before_total = _count_filled(db), _count_total(db)
+
         chunk = 500
-        for start in range(0, len(matched), chunk):
-            db.execute(update(PillORM), matched[start : start + chunk])
+        # 1) 매칭 — efcy/use_method/caution 만 갱신
+        upd = [{k: r[k] for k in ("item_seq", "efcy", "use_method", "caution")} for r in matched]
+        for start in range(0, len(upd), chunk):
+            db.execute(update(PillORM), upd[start : start + chunk])
+
+        # 2) 미매칭 — 사전 검색용 신규 삽입(물리속성 없음)
+        ins = [
+            {
+                "item_seq": r["item_seq"],
+                "item_name": r["item_name"] or "(이름 미상)",
+                "entp_name": r["entp_name"],
+                "image_url": r["image_url"],
+                "efcy": r["efcy"],
+                "use_method": r["use_method"],
+                "caution": r["caution"],
+            }
+            for r in missing
+        ]
+        for start in range(0, len(ins), chunk):
+            db.execute(
+                pg_insert(PillORM)
+                .values(ins[start : start + chunk])
+                .on_conflict_do_nothing(index_elements=["item_seq"])
+            )
+
         db.commit()
-        after = _count_filled(db)
-    print(f"매칭 {len(matched)}/{len(rows)}건 갱신. efcy 채워진 행: {before} → {after}")
+        after_efcy, after_total = _count_filled(db), _count_total(db)
+
+    print(
+        f"매칭 {len(matched)}건 갱신 · 신규 {len(missing)}건 삽입. "
+        f"efcy {before_efcy}→{after_efcy} · 총 행 {before_total}→{after_total}"
+    )
+
+
+def _count_total(db: Any) -> int:
+    from sqlalchemy import text
+
+    return db.execute(text("select count(*) from pills")).scalar()
 
 
 def _count_filled(db: Any) -> int:
