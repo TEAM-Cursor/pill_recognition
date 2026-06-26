@@ -50,7 +50,6 @@
   width: calc(100% + 2 * var(--sp-md) + 4px);
   margin-inline: calc(-1 * var(--sp-md) - 2px);
   aspect-ratio: 1 / 1;
-  max-height: 100%;
   border-radius: 0;
   background:
     radial-gradient(120% 120% at 50% 28%, var(--accent-fog), transparent 62%),
@@ -286,43 +285,4 @@
   font-weight: var(--fw-semibold);
 }
 
-/* ---- 안심 도움말 카드 ---- */
-.tips {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-sm);
-  padding: var(--sp-md);
-}
-.tipsHead {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-}
-.tipsTitle {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  color: var(--text);
-}
-.tipList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-xs);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.tipItem {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-sm);
-  font-size: var(--fs-cap);
-  color: var(--text-dim);
-  line-height: var(--lh-snug);
-}
-.tipMark {
-  flex-shrink: 0;
-  color: var(--accent-deep);
-  display: flex;
-  margin-top: 1px;
-}
 
